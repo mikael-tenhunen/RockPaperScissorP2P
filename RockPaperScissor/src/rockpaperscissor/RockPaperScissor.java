@@ -1,0 +1,13 @@
+package rockpaperscissor;
+
+/**
+ *
+ * @author miikka
+ */
+public class RockPaperScissor {
+
+    public static void main(String[] args) {
+        // TODO code application logic here
+    }
+    
+}
