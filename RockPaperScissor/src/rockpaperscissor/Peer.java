@@ -15,7 +15,7 @@ import java.util.Map;
 public class Peer {
     List<ServerSocket> players;
     List<Gesture> currentChoices;
-    Map<PeerNode,Integer> scores;
+    Map<ServerSocket,Integer> scores;
     ServerSocket me;
     
     public Peer(ServerSocket socket) {
@@ -23,5 +23,9 @@ public class Peer {
         players = new ArrayList();
         currentChoices = new ArrayList();
         scores = new HashMap();
+    }
+
+    public ServerSocket getServerSocket() {
+        return me;
     }
 }
