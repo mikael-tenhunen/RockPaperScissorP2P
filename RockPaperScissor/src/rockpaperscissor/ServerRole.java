@@ -11,8 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- *
- * @author miikka
+ * This is a thread to receive connections from other peers. 
+ * It listens constantly for new connections.
  */
 public class ServerRole implements Runnable {
     Peer me;
@@ -30,10 +30,12 @@ public class ServerRole implements Runnable {
             //Listen for incoming connections and start threads to handle any new clients
             while (true) {
                 //ServerSocket.accept() returns a Socket
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("New client connected");
-                //Thread for a ClientHandler for this socket
-                Thread t = new Thread(new ClientHandler(clientSocket));
+                Socket peerSocket = serverSocket.accept();
+                System.out.println("New client connected from port: " + peerSocket.getPort());
+                
+                PeerHandler peerHandler = new PeerHandler(peerSocket, me);
+                //Thread for a PeerHandler for this socket
+                Thread t = new Thread(peerHandler);
                 t.start();
             }
         } catch (IOException iOException) {
