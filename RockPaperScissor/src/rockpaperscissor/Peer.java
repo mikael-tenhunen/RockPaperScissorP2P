@@ -43,7 +43,6 @@ public class Peer {
     public void connectToPeer(String otherPeerIp, int port) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
-//            PeerHandler peerHandler = new PeerHandler(socket, this);
 //            addPlayer(peerHandler);
             //LIGG OCH LYSSNA ConnectBackRequest
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());

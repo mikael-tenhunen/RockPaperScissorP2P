@@ -30,25 +30,6 @@ class PeerHandler implements Runnable {
             System.out.println("PeerHandler could not get input and/or output streams to peer.");
         }              
     }
-
-//
-//    public ServerSocket getPeerServerSocket() {
-//        try {
-//            out.writeObject (BLABLA);
-//            out.writeObject (obj + "\n");
-//            return serverSocket;
-//        } catch (IOException iOException) {
-//        }  
-//    }
-    
-    
-//    public void listenAnswer() {
-//        //Send localSocket to connection creator, so the other peer
-//        //can create a PeerHandler for this peer.
-//        SocketAddress localSocket = peerSocket.getLocalSocketAddress();
-//        out.writeObject (SocketAddress + "\n");
-//    }
-//    
     
     public void sendConnectBackRequest() {
         // Make a message object for this
@@ -107,9 +88,10 @@ class PeerHandler implements Runnable {
                     String serverIp = serverToConnectTo.getHostString();
                     int serverPort = serverToConnectTo.getPort();
                     Socket socket = new Socket (serverIp, serverPort);
-                    System.out.println("Trying to initialize input- output streams in PeerHandler");
-                    out = new ObjectOutputStream(peerSocket.getOutputStream());
-                    in = new ObjectInputStream(peerSocket.getInputStream());                              
+                    System.out.println("Trying to initialize input- output streams in receiveMessage in PeerHandler");
+                    out = new ObjectOutputStream(socket.getOutputStream());
+                    in = new ObjectInputStream(socket.getInputStream());
+                    System.out.println("receiveMessage input- output streams initialized!");
                     break;
             }
         }
@@ -120,8 +102,9 @@ class PeerHandler implements Runnable {
     @Override
     public void run() {
         System.out.println("PeerHandler run-method activated!");
-        receiveMessage();
+        while(true) {
+            receiveMessage();
+        }
     }
-    
     
 }
