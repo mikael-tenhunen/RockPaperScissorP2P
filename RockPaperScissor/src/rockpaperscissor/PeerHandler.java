@@ -50,11 +50,11 @@ class PeerHandler implements Runnable {
         }          
     }
     
-        public void sendAck() {
+    public void sendAck() {
         // Make a message object for this
         try {
             String msg = "Ack";
-            out.writeObject (msg + "\n");
+            out.writeObject(msg + "\n");
             
             Object returnMessage = null;
             try {
@@ -68,6 +68,15 @@ class PeerHandler implements Runnable {
         }          
     }
 
+    public void sendGesture(Gesture gesture) {
+        try {
+            Message msg = new Message("Gesture",gesture);
+            out.writeObject(msg + "\n");
+        }
+        catch (IOException iOException) {
+        }
+    }
+    
     public void receiveMessage() {
         Object returnMessage = null;
         try {
@@ -93,6 +102,9 @@ class PeerHandler implements Runnable {
                     in = new ObjectInputStream(socket.getInputStream());
                     System.out.println("receiveMessage input- output streams initialized!");
                     break;
+                case "Gesture":
+                    Gesture gesture = (Gesture) msg.getMsgObj();
+                    me.updateGameState(this,gesture);
             }
         }
         catch (Exception e) {
