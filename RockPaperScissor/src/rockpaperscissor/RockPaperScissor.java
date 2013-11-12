@@ -22,9 +22,18 @@ public class RockPaperScissor {
             //start listening server
             Thread serverThread = new Thread(new ServerRole(peer));
             serverThread.start();
+            
+            //TEST KOD
+            if (port == 8666) {
+                System.out.println("Trying to connect to other peer at port 8180");
+                peer.connectToPeer("localhost",8180);
+            }   
+            //TEST KOD
+            
         } catch (IOException ex) {
             Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
     
 }

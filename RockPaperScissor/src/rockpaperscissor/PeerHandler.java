@@ -4,6 +4,7 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
@@ -21,14 +22,13 @@ class PeerHandler implements Runnable {
         this.peerSocket = peerSocket;
         this.me = me;
         try {
-            in = new ObjectInputStream(peerSocket.getInputStream());
+            System.out.println("Trying to initialize input- output streams in PeerHandler");
             out = new ObjectOutputStream(peerSocket.getOutputStream());
+            in = new ObjectInputStream(peerSocket.getInputStream());
+//            System.out.println("PeerHandler got input- and output streams.");
         } catch (IOException iOException) {
-            System.out.println("Could not get input and/or output streams to peer.");
-        }        
-
-//        //add this new PeerHandler to my list of PeerHandlers
-//        me.addPlayer(this);        
+            System.out.println("PeerHandler could not get input and/or output streams to peer.");
+        }              
     }
 
 //
@@ -98,6 +98,19 @@ class PeerHandler implements Runnable {
             
             switch(type) {
                 case "ConnectBackRequest": 
+                    System.out.println("placeholder for ConnectBackRequest");
+                    break;
+                case "ServerSocketAddress":
+                    InetSocketAddress serverToConnectTo = (InetSocketAddress) msg.getMsgObj();
+                    //connect to the other peer so it creates a 
+                    //PeerHandler for this peer
+                    String serverIp = serverToConnectTo.getHostString();
+                    int serverPort = serverToConnectTo.getPort();
+                    Socket socket = new Socket (serverIp, serverPort);
+                    System.out.println("Trying to initialize input- output streams in PeerHandler");
+                    out = new ObjectOutputStream(peerSocket.getOutputStream());
+                    in = new ObjectInputStream(peerSocket.getInputStream());                              
+                    break;
             }
         }
         catch (Exception e) {
@@ -106,6 +119,7 @@ class PeerHandler implements Runnable {
         
     @Override
     public void run() {
+        System.out.println("PeerHandler run-method activated!");
         receiveMessage();
     }
     

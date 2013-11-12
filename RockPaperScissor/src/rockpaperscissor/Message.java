@@ -1,11 +1,13 @@
 package rockpaperscissor;
 
-/* Messages are Strings.
+import java.io.Serializable;
+
+/* Message types are Strings.
 * -ConnectBackRequest => 
 * -Ack
-* -
+* -ServerSocketAddress
 */
-public class Message {
+public class Message implements Serializable {
     private String type; 
     private Object msgObj;
     
