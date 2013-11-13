@@ -36,7 +36,7 @@ public class RockPaperScissor {
         
     }
     
-    public Peer startServer(int port) {
+    public static Peer startServer(int port) {
         try {
             ServerSocket servsocket = new ServerSocket(port);
             Peer peer = new Peer (servsocket);        
