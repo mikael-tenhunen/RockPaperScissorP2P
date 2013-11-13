@@ -12,11 +12,32 @@ import java.util.logging.Logger;
 public class RockPaperScissor {
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        
-        System.out.print("Choose Port to listen to new connections: ");
-        int port = in.nextInt();
-        try {
+//        Scanner in = new Scanner(System.in);
+//        
+//        System.out.print("Choose Port to listen to new connections: ");
+//        int port = in.nextInt();
+//        try {
+//            ServerSocket servsocket = new ServerSocket(port);
+//            Peer peer = new Peer (servsocket);        
+//            //start listening server
+//            Thread serverThread = new Thread(new ServerRole(peer));
+//            serverThread.start();
+//            
+//            //TEST KOD
+//            if (port == 8666) {
+//                System.out.println("Trying to connect to other peer at port 8180");
+//                peer.connectToPeer("localhost",8180);
+//            }   
+//            //TEST KOD
+//            
+//        } catch (IOException ex) {
+//            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+    }
+    
+    public void startServer(int port) {
+                try {
             ServerSocket servsocket = new ServerSocket(port);
             Peer peer = new Peer (servsocket);        
             //start listening server
@@ -33,7 +54,6 @@ public class RockPaperScissor {
         } catch (IOException ex) {
             Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
 }

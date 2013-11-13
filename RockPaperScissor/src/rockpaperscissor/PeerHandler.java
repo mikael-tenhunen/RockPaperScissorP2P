@@ -36,6 +36,7 @@ class PeerHandler implements Runnable {
         try {
             String msg = "ConnectBackRequest";
             out.writeObject (msg + "\n");
+            out.flush();
             
             Object returnMessage = null;
             try {
@@ -55,6 +56,7 @@ class PeerHandler implements Runnable {
         try {
             String msg = "Ack";
             out.writeObject(msg + "\n");
+            out.flush();
             
             Object returnMessage = null;
             try {
@@ -72,6 +74,7 @@ class PeerHandler implements Runnable {
         try {
             Message msg = new Message("Gesture",gesture);
             out.writeObject(msg + "\n");
+            out.flush();
         }
         catch (IOException iOException) {
         }

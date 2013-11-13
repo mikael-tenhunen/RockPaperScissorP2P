@@ -28,6 +28,7 @@ public class Peer {
         playerHandlers = new ArrayList();
         currentChoices = new ArrayList();
         scores = new ArrayList();
+        myCurrentGesture = null;
     }
 
     public ServerSocket getServerSocket() {
@@ -53,6 +54,7 @@ public class Peer {
             Message msg = new Message("ServerSocketAddress", localServerAddress);
             //write message to output stream
             out.writeObject (msg);
+            out.flush();
             
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);

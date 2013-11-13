@@ -17,6 +17,8 @@ import java.net.Socket;
 public class ServerRole implements Runnable {
     Peer me;
     ServerSocket serverSocket;
+    int playerLimit = 10;
+    
 
     public ServerRole(Peer me) {
         this.me = me;

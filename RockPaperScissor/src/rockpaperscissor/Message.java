@@ -6,6 +6,7 @@ import java.io.Serializable;
 * -ConnectBackRequest => 
 * -Ack
 * -ServerSocketAddress
+* -Gesture
 */
 public class Message implements Serializable {
     private String type; 
