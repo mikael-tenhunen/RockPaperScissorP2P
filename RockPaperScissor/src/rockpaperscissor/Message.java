@@ -2,11 +2,12 @@ package rockpaperscissor;
 
 import java.io.Serializable;
 
-/* Message types are Strings.
-* -ConnectBackRequest => 
+/* Message types are Strings:
 * -Ack
 * -ServerSocketAddress
 * -Gesture
+* -Disconnect
+* -TextMessage
 */
 public class Message implements Serializable {
     private String type; 

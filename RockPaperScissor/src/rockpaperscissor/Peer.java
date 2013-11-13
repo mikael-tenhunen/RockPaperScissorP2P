@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * @author miikka
  */
 public class Peer {
+    private List<SocketAddress> playerServers;
     private List<PeerHandler> playerHandlers;
     private List<Gesture> currentChoices;
     private List<Integer> scores;
@@ -25,6 +26,7 @@ public class Peer {
     
     public Peer(ServerSocket socket) {
         serverSocket = socket;
+        playerServers = new ArrayList();
         playerHandlers = new ArrayList();
         currentChoices = new ArrayList();
         scores = new ArrayList();
@@ -38,6 +40,8 @@ public class Peer {
     //addPlayer is called when the serversocket accepts new player connection
     public void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
+        currentChoices.add(null);
+        scores.add(0);
     }
     
     public void connectToPeer(String otherPeerIp, int port) {
@@ -59,6 +63,10 @@ public class Peer {
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void disconnect() {
+        
     }
     
     public void deletePeer() {
@@ -136,5 +144,15 @@ public class Peer {
                 scores.set(i, scores.get(i)+score);
             }
         }        
+    }
+    
+    public void testMessage(String msg) {
+        for (PeerHandler peer : playerHandlers) {
+            peer.sendTextMessage(msg);
+        }
+    }
+
+    void handleTextMessage(String textMessage) {
+        System.out.println("Text message received: \"" + textMessage + "\"");
     }
 }
