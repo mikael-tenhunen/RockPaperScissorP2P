@@ -31,12 +31,22 @@ class PeerHandler implements Runnable {
         }
         me.addPlayer(this);
     }
+
+    //Constructor to be called when we have 
+    PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me) {
+        this.in = in;
+        this.out = out;
+        peerSocket = null;
+        this.me = me;
+        
+        me.addPlayer(this);
+    }
     
     public void sendAck() {
         // Make a message object for this
         try {
             String msg = "Ack";
-            out.writeObject(msg + "\n");
+            out.writeObject(msg);
             out.flush();
             
             Object returnMessage = null;
@@ -54,7 +64,7 @@ class PeerHandler implements Runnable {
     public void sendGesture(Gesture gesture) {
         try {
             Message msg = new Message("Gesture",gesture);
-            out.writeObject(msg + "\n");
+            out.writeObject(msg);
             out.flush();
         }
         catch (IOException iOException) {
@@ -63,9 +73,10 @@ class PeerHandler implements Runnable {
     
     public void sendTextMessage(String textMessage) {
         try {
-            System.out.println("Sending text message to: " + peerSocket.getRemoteSocketAddress());
+            //System.out.println("Sending text message to: " + peerSocket.getRemoteSocketAddress());
+            System.out.println("Sending text message");
             Message msg = new Message("TextMessage",textMessage);
-            out.writeObject(msg + "\n");
+            out.writeObject(msg);
             out.flush();
         }
         catch (IOException iOException) {
@@ -95,14 +106,24 @@ class PeerHandler implements Runnable {
                     in = new ObjectInputStream(peerSocket.getInputStream());
                     System.out.println("receiveMessage input- output streams initialized!");
                     System.out.println("peerhandler's local socket at port: " + peerSocket.getLocalSocketAddress());
+                    System.out.println("peerhandler's remote socket at port: " + peerSocket.getRemoteSocketAddress());
                     break;
                 case "Gesture":
                     Gesture gesture = (Gesture) msg.getMsgObj();
                     me.updateGameState(this,gesture);
                     break;
                 case "TextMessage":
+                    System.out.println("Received text message");
                     String textMessage = (String) msg.getMsgObj();
                     me.handleTextMessage(textMessage);
+                    //TEST1
+//                    Message returnmessage = new Message("TextMessage","GREETINGS FROM THE STARS");
+//                    out.writeObject(returnmessage);
+//                    out.flush();
+                    //TEST1
+                    //TEST2
+                    sendTextMessage("WE COME IN PEACE");
+                    //TEST2
                     break;
                     
             }

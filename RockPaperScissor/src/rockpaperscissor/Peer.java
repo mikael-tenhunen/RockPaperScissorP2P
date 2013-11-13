@@ -53,12 +53,29 @@ public class Peer {
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             Object returnMessage = null;
             SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
+            
+//            //Test creating peerhandler with streams
+//            PeerHandler peerHandler = new PeerHandler(out,in,this);
+//            Thread thread = new Thread(peerHandler);
+//            thread.start();
+            
             //Send local server address to the other peer so it can
             //connect to this peer and this peer creates a PeerHandler for it
-            Message msg = new Message("ServerSocketAddress", localServerAddress);
+//            Message msg = new Message("ServerSocketAddress", localServerAddress);
+            Message msg = new Message("TextMessage", "HELLO FROM SPACE!");
             //write message to output stream
             out.writeObject (msg);
             out.flush();
+            try {
+                Object receivedMessage = null;
+                while (receivedMessage == null) {
+                    receivedMessage = in.readObject ();
+                }
+                Message receivedMsg = (Message) receivedMessage;
+                System.out.println(receivedMsg.getMsgObj());
+            } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);                
+            }          
             
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);

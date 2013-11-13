@@ -20,7 +20,7 @@ public class RockPaperScissor {
             Peer peer = startServer(port);
             
         //TEST
-        sendTestMessage(peer);
+//        sendTestMessage(peer);
         //TEST
         } catch (IOException ex) {
             Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);

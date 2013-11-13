@@ -38,11 +38,8 @@ public class ServerRole implements Runnable {
                 //ServerSocket.accept() returns a Socket
                 Socket peerSocket = serverSocket.accept();
                 System.out.println("New client connected from port: " + peerSocket.getPort());
-                //PeerHandler peerHandler = new PeerHandler(peerSocket, me);
-                //Thread for a PeerHandler for this socket
-                System.out.println("created new PeerHandler");
-                //e.execute(new Thread(peerHandler));
                 e.execute(new PeerHandler(peerSocket, me));
+                System.out.println("created new PeerHandler");
             }
         } catch (IOException iOException) {
             try {
@@ -54,5 +51,8 @@ public class ServerRole implements Runnable {
             }
         }
     }
-
+    
+    public Executor getExecutor() {
+        return e;
+    }
 }
