@@ -3,6 +3,7 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -37,28 +38,53 @@ public class Peer {
         return serverSocket;
     }
     
+    public List getPlayerServers() {
+        return playerServers;
+    }
+    
     //addPlayer is called when the serversocket accepts new player connection
     public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
         currentChoices.add(null);
         scores.add(0);
+        playerServers.add(peerHandler.getServerSocketAddress());
     }
     
-    public synchronized void connectToPeer(String otherPeerIp, int port) {
+    public void handlePeerServerList(List<SocketAddress> serverSocketAddresses) {
+        String otherPeerIp;
+        int port;
+        //Connect to all the other (until now unknown) peers 
+        for (SocketAddress socketAddress : serverSocketAddresses) {
+            if (!playerServers.contains(socketAddress)) {
+                InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+                otherPeerIp = inetSocketAddress.getHostString();
+                port = inetSocketAddress.getPort();
+                connectToPeer(otherPeerIp,port);
+            }
+        }
+        System.out.println("Now my playerServers contains " + playerServers);
+    }
+    
+    public void connectToPeer(String otherPeerIp, int port) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
 //            addPlayer(peerHandler);
             //LIGG OCH LYSSNA ConnectBackRequest
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            Object returnMessage = null;
-            SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
+//            Object returnMessage = null;
+//            SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
             
-            //Test creating peerhandler with streams
+            //Create peerhandler with streams, and start its thread
             PeerHandler peerHandler = new PeerHandler(out,in,this);
             Thread thread = new Thread(peerHandler);
             thread.start();
             peerHandler.sendTextMessage("Is there anybody out there?");
+            
+//            //Send information about this peer's server-role
+//            peerHandler.sendServerSocketAddress();
+            
+            
 //            //Send local server address to the other peer so it can
 //            //connect to this peer and this peer creates a PeerHandler for it
 ////            Message msg = new Message("ServerSocketAddress", localServerAddress);
