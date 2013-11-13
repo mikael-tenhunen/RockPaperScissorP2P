@@ -38,13 +38,13 @@ public class Peer {
     }
     
     //addPlayer is called when the serversocket accepts new player connection
-    public void addPlayer(PeerHandler peerHandler) {
+    public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
         currentChoices.add(null);
         scores.add(0);
     }
     
-    public void connectToPeer(String otherPeerIp, int port) {
+    public synchronized void connectToPeer(String otherPeerIp, int port) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
 //            addPlayer(peerHandler);
@@ -54,49 +54,49 @@ public class Peer {
             Object returnMessage = null;
             SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
             
-//            //Test creating peerhandler with streams
-//            PeerHandler peerHandler = new PeerHandler(out,in,this);
-//            Thread thread = new Thread(peerHandler);
-//            thread.start();
-            
-            //Send local server address to the other peer so it can
-            //connect to this peer and this peer creates a PeerHandler for it
-//            Message msg = new Message("ServerSocketAddress", localServerAddress);
-            Message msg = new Message("TextMessage", "HELLO FROM SPACE!");
-            //write message to output stream
-            out.writeObject (msg);
-            out.flush();
-            try {
-                Object receivedMessage = null;
-                while (receivedMessage == null) {
-                    receivedMessage = in.readObject ();
-                }
-                Message receivedMsg = (Message) receivedMessage;
-                System.out.println(receivedMsg.getMsgObj());
-            } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);                
-            }          
+            //Test creating peerhandler with streams
+            PeerHandler peerHandler = new PeerHandler(out,in,this);
+            Thread thread = new Thread(peerHandler);
+            thread.start();
+            peerHandler.sendTextMessage("Is there anybody out there?");
+//            //Send local server address to the other peer so it can
+//            //connect to this peer and this peer creates a PeerHandler for it
+////            Message msg = new Message("ServerSocketAddress", localServerAddress);
+//            Message msg = new Message("TextMessage", "HELLO FROM SPACE!");
+//            //write message to output stream
+//            out.writeObject (msg);
+//            out.flush();
+//            try {
+//                Object receivedMessage = null;
+//                while (receivedMessage == null) {
+//                    receivedMessage = in.readObject ();
+//                }
+//                Message receivedMsg = (Message) receivedMessage;
+//                System.out.println(receivedMsg.getMsgObj());
+//            } catch (ClassNotFoundException ex) {
+//                    Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);                
+//            }          
             
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void disconnect() {
+    public synchronized void disconnectMe() {
         
     }
     
-    public void deletePeer() {
+    public synchronized void disconnectPeer() {
     }
     
-    public void playGesture(Gesture gesture) {
+    public synchronized void playGesture(Gesture gesture) {
         for(PeerHandler peerHandler : playerHandlers) {
             peerHandler.sendGesture(gesture);
         }
         myCurrentGesture = gesture;
     }
 
-    public void updateGameState(PeerHandler peerHandler, Gesture gesture) {
+    public synchronized void updateGameState(PeerHandler peerHandler, Gesture gesture) {
         int index = playerHandlers.indexOf(peerHandler);
         currentChoices.set(index, gesture);
         //Calculate score if all results are in
@@ -109,7 +109,7 @@ public class Peer {
         }
     }
     
-    public void calculateScore() {
+    public synchronized void calculateScore() {
         int nrOfPlayers = currentChoices.size();
         int papers = 0;
         int rocks = 0;

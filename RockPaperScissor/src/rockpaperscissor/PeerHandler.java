@@ -41,25 +41,6 @@ class PeerHandler implements Runnable {
         
         me.addPlayer(this);
     }
-    
-    public void sendAck() {
-        // Make a message object for this
-        try {
-            String msg = "Ack";
-            out.writeObject(msg);
-            out.flush();
-            
-            Object returnMessage = null;
-            try {
-                while (returnMessage == null) {
-                        returnMessage = in.readObject ();
-                }
-            }
-            catch (Exception e) {
-            }            
-        } catch (IOException iOException) {
-        }          
-    }
 
     public void sendGesture(Gesture gesture) {
         try {
@@ -122,7 +103,7 @@ class PeerHandler implements Runnable {
 //                    out.flush();
                     //TEST1
                     //TEST2
-                    sendTextMessage("WE COME IN PEACE");
+//                    sendTextMessage("WE COME IN PEACE");
                     //TEST2
                     break;
                     
