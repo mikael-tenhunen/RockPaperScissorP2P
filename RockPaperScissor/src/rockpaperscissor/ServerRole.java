@@ -9,20 +9,24 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * This is a thread to receive connections from other peers. 
  * It listens constantly for new connections.
  */
 public class ServerRole implements Runnable {
-    Peer me;
-    ServerSocket serverSocket;
-    int playerLimit = 10;
-    
+    private Peer me;
+    private ServerSocket serverSocket;
+    private int playerLimit = 10;
+    private Executor e;
+
 
     public ServerRole(Peer me) {
         this.me = me;
         serverSocket = me.getServerSocket();
+        e = Executors.newFixedThreadPool(playerLimit);
     }
 
     public void run() {
@@ -34,11 +38,11 @@ public class ServerRole implements Runnable {
                 //ServerSocket.accept() returns a Socket
                 Socket peerSocket = serverSocket.accept();
                 System.out.println("New client connected from port: " + peerSocket.getPort());
-                PeerHandler peerHandler = new PeerHandler(peerSocket, me);
+                //PeerHandler peerHandler = new PeerHandler(peerSocket, me);
                 //Thread for a PeerHandler for this socket
                 System.out.println("created new PeerHandler");
-                Thread t = new Thread(peerHandler);
-                t.start();
+                //e.execute(new Thread(peerHandler));
+                e.execute(new PeerHandler(peerSocket, me));
             }
         } catch (IOException iOException) {
             try {
