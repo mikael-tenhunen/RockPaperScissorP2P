@@ -186,6 +186,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Rock"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rockRadioActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="paperRadio">
       <Properties>
@@ -194,6 +197,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Paper"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="paperRadioActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="scissorRadio">
       <Properties>
@@ -207,6 +213,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Send Choice"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sendButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {&#xa;                if(rockRadio.isSelected() == true)&#xa;                {&#xa;                    peer.playGesture(Gesture.ROCK);&#xa;                }&#xa;                else if(paperRadio.isSelected() == true)&#xa;                {&#xa;                    peer.playGesture(Gesture.PAPER);&#xa;                }&#xa;                else if(scissorRadio.isSelected() == true)&#xa;                {&#xa;                    peer.playGesture(Gesture.SCISSOR);&#xa;                }&#xa;                else&#xa;                {&#xa;                    JOptionPane.showMessageDialog(null, &quot;You need to pick your gesture&quot;);&#xa;                }   &#xa;              &#xa;&#xa;&#xa;            }&#xa;        }    );"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="disconnectButton">
       <Properties>

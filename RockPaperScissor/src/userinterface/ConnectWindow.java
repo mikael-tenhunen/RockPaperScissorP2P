@@ -16,7 +16,7 @@ import rockpaperscissor.RockPaperScissor;
  */
 public class ConnectWindow extends javax.swing.JFrame {
     int portInt;
-    int portInt2;
+    int localPortNumber;
     int remotePortInt;
     String remoteIp;
     Peer peer;
@@ -87,10 +87,10 @@ public class ConnectWindow extends javax.swing.JFrame {
                     }
                     else
                     {
-                        portInt2 = Integer.parseInt(localPort);
+                        localPortNumber = Integer.parseInt(localPort);
                         remotePortInt = Integer.parseInt(remotePort);
-                        peer2 = RockPaperScissor.startServer(portInt2);
-                        peer.connectToPeer(remoteIp, remotePortInt);
+                        peer2 = RockPaperScissor.startServer(localPortNumber);
+                        peer2.connectToPeer(remoteIp, remotePortInt);
                         ConnectWindow.this.dispose();
                         MainWindow mainWindow = new MainWindow();
                     }
