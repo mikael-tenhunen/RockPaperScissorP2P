@@ -56,6 +56,7 @@ public class Peer {
         currentChoices.add(null);
         scores.add(0);
         playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
+        System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
     }
     
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {

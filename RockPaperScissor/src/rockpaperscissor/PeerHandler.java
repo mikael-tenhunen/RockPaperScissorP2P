@@ -17,7 +17,7 @@ class PeerHandler implements Runnable {
     Peer me;
     ObjectInputStream in;
     ObjectOutputStream out;
-    SocketAddress serverSocketAddress;
+    InetSocketAddress serverSocketAddress;
     
     //This is the constructor used when someone has called this peer's server-role.
     //It sends a message requesting serverSocketAddress, so that the other side
@@ -30,7 +30,7 @@ class PeerHandler implements Runnable {
             out = new ObjectOutputStream(peerSocket.getOutputStream());
             in = new ObjectInputStream(peerSocket.getInputStream());
 //            System.out.println("PeerHandler got input- and output streams.");
-            sendServerSocketAddressRequest();
+            sendServerSocketAddressRequest("ServerSocketAddressRequestFromListener");
         } catch (IOException iOException) {
             System.out.println("PeerHandler could not get input and/or output streams to peer.");
         }
@@ -43,12 +43,15 @@ class PeerHandler implements Runnable {
         this.out = out;
         peerSocket = null;
         this.me = me;
-        sendServerSocketAddressRequest();
+        sendServerSocketAddressRequest("ServerSocketAddressRequestFromConnecter");
     }
     
-    public synchronized void sendServerSocketAddressRequest() {
+    // type can be
+    // ServerSocketAddressRequestFromListener
+    // ServerSocketAddressRequestFromConnecter
+    public synchronized void sendServerSocketAddressRequest(String type) {
         try {
-            Message msg = new Message("ServerSocketAddressRequest",null);
+            Message msg = new Message(type,null);
             out.writeObject(msg);
             out.flush();
         }
@@ -57,10 +60,13 @@ class PeerHandler implements Runnable {
     }
     
     //Sends this peer's server-role socket address
-    public synchronized void sendServerSocketAddress() {
+    //type can be: 
+    //
+    //
+    public synchronized void sendServerSocketAddress(String type) {
         try {
-            SocketAddress serverToConnectTo = me.getServerSocket().getLocalSocketAddress();
-            Message msg = new Message("ServerSocketAddress",serverToConnectTo);
+            InetSocketAddress serverToConnectTo = (InetSocketAddress) me.getServerSocket().getLocalSocketAddress();
+            Message msg = new Message(type, serverToConnectTo);
             out.writeObject(msg);
             out.flush();
         }
@@ -76,6 +82,7 @@ class PeerHandler implements Runnable {
             Message msg = new Message("PeerServerList",me.getPlayerServers());
             out.writeObject(msg);
             out.flush();
+            System.out.println("Sent peerServerList");
         }
         catch (IOException iOException) {
         }
@@ -114,10 +121,10 @@ class PeerHandler implements Runnable {
             String type = msg.getType();
             
             switch(type) {
-                case "ServerSocketAddress":
-                    SocketAddress serverToConnectTo = (SocketAddress) msg.getMsgObj();
-                    serverSocketAddress = serverToConnectTo;
-                    System.out.println("serverSocketAddress received!");
+                case "ServerSocketAddressListener":
+                    InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
+                    serverSocketAddress = serverConnecter;
+//                    System.out.println("serverSocketAddress received!");
                     //trying sendPeerServerList
                     sendPeerServerList();
                     me.addPlayer(this);
@@ -134,8 +141,16 @@ class PeerHandler implements Runnable {
 //                    System.out.println("peerhandler's local socket at port: " + peerSocket.getLocalSocketAddress());
 //                    System.out.println("peerhandler's remote socket at port: " + peerSocket.getRemoteSocketAddress());
                     break;
-                case "ServerSocketAddressRequest":
-                    sendServerSocketAddress();
+                case "ServerSocketAddressConnecter":
+                    InetSocketAddress serverListener = (InetSocketAddress) msg.getMsgObj();
+                    serverSocketAddress = serverListener;
+                    me.addPlayer(this);
+                    break;
+                case "ServerSocketAddressRequestFromConnecter":
+                    sendServerSocketAddress("ServerSocketAddressConnecter");
+                    break;
+                case "ServerSocketAddressRequestFromListener":
+                    sendServerSocketAddress("ServerSocketAddressListener");
                     break;
                 case "PeerServerList":
                     List<InetSocketAddress> serverSocketAddressList = (List<InetSocketAddress>) msg.getMsgObj();
