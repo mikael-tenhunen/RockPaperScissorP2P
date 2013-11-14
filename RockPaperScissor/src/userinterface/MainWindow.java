@@ -103,21 +103,20 @@ public class MainWindow extends javax.swing.JFrame {
                 {
                     if(rockRadio.isSelected() == true)
                     {
-                        peer.playGesture(Gesture.ROCK);
+                        MainWindow.this.peer.playGesture(Gesture.ROCK);
                     }
                     else if(paperRadio.isSelected() == true)
                     {
-                        peer.playGesture(Gesture.PAPER);
+                        MainWindow.this.peer.playGesture(Gesture.PAPER);
                     }
                     else if(scissorRadio.isSelected() == true)
                     {
-                        peer.playGesture(Gesture.SCISSOR);
+                        MainWindow.this.peer.playGesture(Gesture.SCISSOR);
                     }
                     else
                     {
                         JOptionPane.showMessageDialog(null, "You need to pick your gesture");
                     }
-
                 }
             }    );
 
