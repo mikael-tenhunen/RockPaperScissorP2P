@@ -5,6 +5,7 @@ import java.util.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import userinterface.ConnectWindow;
 /**
  *
  * @author miikka   
@@ -28,6 +29,8 @@ public class RockPaperScissor {
         } catch (IOException ex) {
             Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ConnectWindow cw = new ConnectWindow();
+       // ConnectWindow.startConnectWindow();
     }
     
     public static Peer startServer(int port) throws IOException {

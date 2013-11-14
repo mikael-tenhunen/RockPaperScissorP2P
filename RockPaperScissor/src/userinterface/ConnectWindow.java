@@ -76,15 +76,18 @@ public class ConnectWindow extends javax.swing.JFrame {
                     String localPort = localPortField.getText();
                     String remoteIP = remoteIpField.getText();
                     String remotePort = remotePortField.getText();
-                    if (localPort==null || localPort=="")
+                    if (localPortField.getText().trim().length() == 0 ||
+                        localPortField.getText().trim().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "You need to enter a Local Port");
                     }
-                    else if (remoteIP==null || remoteIP=="")
+                    else if (remoteIpField.getText().trim().length() == 0 ||
+                        remoteIpField.getText().trim().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "You need to enter a Remote IP");
                     }
-                    else if (remotePort==null || remotePort=="")
+                    else if (remotePortField.getText().trim().length() == 0 ||
+                        remotePortField.getText().trim().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "You need to enter a Remote Port");
                     }
@@ -101,7 +104,7 @@ public class ConnectWindow extends javax.swing.JFrame {
                         }
                         peer2.connectToPeer(remoteIp, remotePortInt);
                         ConnectWindow.this.dispose();
-                        MainWindow mainWindow = new MainWindow();
+                        MainWindow.startMainWindow();
                     }
 
                 }
@@ -122,24 +125,24 @@ public class ConnectWindow extends javax.swing.JFrame {
                     {
                         public void actionPerformed(ActionEvent e)
                         {
-                            String localPort = localPortField.getText();
-                            if (localPort==null)
+                            //String localPort = localPortField.getText();
+                            if (localPortField.getText().trim().length() == 0 ||
+                                localPortField.getText().trim().equals(""))
                             {
                                 JOptionPane.showMessageDialog(null, "You need to enter a Local Port");
                             }
                             else
                             {
-                                portInt = Integer.parseInt(localPort);
+                                portInt = Integer.parseInt(localPortField.getText());
                                 try
                                 {
                                     peer = RockPaperScissor.startServer(portInt);
-                                    RockPaperScissor.testConnect(peer);
                                 }
                                 catch(IOException exep)
                                 {
                                 }
                                 ConnectWindow.this.dispose();
-                                MainWindow mainWindow = new MainWindow();
+                                MainWindow.startMainWindow();
 
                             }
 
