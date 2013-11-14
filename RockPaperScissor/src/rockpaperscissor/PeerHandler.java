@@ -4,6 +4,7 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.List;
@@ -45,7 +46,7 @@ class PeerHandler implements Runnable {
         sendServerSocketAddressRequest();
     }
     
-    public void sendServerSocketAddressRequest() {
+    public synchronized void sendServerSocketAddressRequest() {
         try {
             Message msg = new Message("ServerSocketAddressRequest",null);
             out.writeObject(msg);
@@ -56,7 +57,7 @@ class PeerHandler implements Runnable {
     }
     
     //Sends this peer's server-role socket address
-    public void sendServerSocketAddress() {
+    public synchronized void sendServerSocketAddress() {
         try {
             SocketAddress serverToConnectTo = me.getServerSocket().getLocalSocketAddress();
             Message msg = new Message("ServerSocketAddress",serverToConnectTo);
@@ -69,7 +70,7 @@ class PeerHandler implements Runnable {
 
     //Sends this peer's list of peer server socket addresses, so that a peer
     //joining the network can establish connections with all other peers
-    public void sendPeerServerList() {
+    public synchronized void sendPeerServerList() {
         try {
             System.out.println("Now in sendPeerServerList in PeerHandler...");
             Message msg = new Message("PeerServerList",me.getPlayerServers());
@@ -81,7 +82,7 @@ class PeerHandler implements Runnable {
     }
     
     //Sends game gesture
-    public void sendGesture(Gesture gesture) {
+    public synchronized void sendGesture(Gesture gesture) {
         try {
             Message msg = new Message("Gesture",gesture);
             out.writeObject(msg);
@@ -91,7 +92,7 @@ class PeerHandler implements Runnable {
         }
     }
     
-    public void sendTextMessage(String textMessage) {
+    public synchronized void sendTextMessage(String textMessage) {
         try {
             //System.out.println("Sending text message to: " + peerSocket.getRemoteSocketAddress());
             System.out.println("Sending text message");
@@ -103,7 +104,7 @@ class PeerHandler implements Runnable {
         }        
     }
     
-    public void receiveMessage() {
+    public synchronized void receiveMessage() {
         Object returnMessage = null;
         try {
             while (returnMessage == null) {
@@ -137,7 +138,7 @@ class PeerHandler implements Runnable {
                     sendServerSocketAddress();
                     break;
                 case "PeerServerList":
-                    List<SocketAddress> serverSocketAddressList = (List<SocketAddress>) msg.getMsgObj();
+                    List<InetSocketAddress> serverSocketAddressList = (List<InetSocketAddress>) msg.getMsgObj();
                     me.handlePeerServerList(serverSocketAddressList);
                     break;
                 case "Gesture":
@@ -165,7 +166,8 @@ class PeerHandler implements Runnable {
     }
     
     SocketAddress getServerSocketAddress() {
-        return serverSocketAddress;
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) serverSocketAddress;
+        return inetSocketAddress;
     }
         
     @Override
