@@ -24,6 +24,7 @@ public class Peer {
     private ServerSocket serverSocket;
     private Gesture myCurrentGesture;
     private ServerRole serverRole;
+    private int myScore;
     
     
     public Peer(ServerSocket socket) {
@@ -32,6 +33,7 @@ public class Peer {
         playerHandlers = new ArrayList();
         currentChoices = new ArrayList();
         scores = new ArrayList();
+        myScore = 0;
         myCurrentGesture = null;
     }
     
@@ -149,6 +151,7 @@ public class Peer {
             peerHandler.sendGesture(gesture);
         }
         myCurrentGesture = gesture;
+        System.out.println("Played gesture from Peer... UI succesful");
     }
 
     public synchronized void updateGameState(PeerHandler peerHandler, Gesture gesture) {
