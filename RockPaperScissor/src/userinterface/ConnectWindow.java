@@ -102,7 +102,7 @@ public class ConnectWindow extends javax.swing.JFrame {
                         catch(IOException exep)
                         {
                         }
-                        peer2.connectToPeer(remoteIp, remotePortInt);
+                        peer2.connectToPeer(remoteIp, remotePortInt, true);
                         ConnectWindow.this.dispose();
                         MainWindow.startMainWindow();
                     }
