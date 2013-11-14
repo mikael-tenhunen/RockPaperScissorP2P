@@ -3,8 +3,10 @@ package rockpaperscissor;
 import java.io.Serializable;
 
 /* Message types are Strings:
-* -ServerSocketAddressRequest
-* -ServerSocketAddress
+* -ServerSocketAddressRequestFromListener
+* -ServerSocketAddressRequestFromConnecter
+* -ServerSocketAddressListener
+* -ServerSocketAddressConnecter
 * -PeerServerList
 * -Gesture
 * -Disconnect
