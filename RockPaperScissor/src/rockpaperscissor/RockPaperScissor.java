@@ -32,17 +32,16 @@ public class RockPaperScissor {
     
     public static Peer startServer(int port) throws IOException {
         ServerSocket servsocket = new ServerSocket(port);
-        Peer peer = new Peer (servsocket);        
-        //start listening server
-        Thread serverThread = new Thread(new ServerRole(peer));
-        serverThread.start();
-
-        //TEST KOD
-        if (port == 8666) {
-            System.out.println("Trying to connect to other peer at port 8180");
-            peer.connectToPeer("localhost",8180);
-        }   
-        //TEST KOD
+        Peer peer = new Peer (servsocket);   
+        //ServerRole of peer is initialized in startServerRole method of Peer
+        peer.startServerRole();
+        
+//        //TEST KOD
+//        if (port == 8666) {
+//            System.out.println("Trying to connect to other peer at port 8180");
+//            peer.connectToPeer("localhost",8180);
+//        }   
+//        //TEST KOD
         return peer;
     }
     

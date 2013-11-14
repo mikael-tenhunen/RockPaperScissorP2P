@@ -17,12 +17,13 @@ import java.util.logging.Logger;
  * @author miikka
  */
 public class Peer {
-    private List<SocketAddress> playerServers;
+    private List<InetSocketAddress> playerServers;
     private List<PeerHandler> playerHandlers;
     private List<Gesture> currentChoices;
     private List<Integer> scores;
     private ServerSocket serverSocket;
     private Gesture myCurrentGesture;
+    private ServerRole serverRole;
     
     
     public Peer(ServerSocket socket) {
@@ -33,12 +34,19 @@ public class Peer {
         scores = new ArrayList();
         myCurrentGesture = null;
     }
+    
+    public void startServerRole() {
+        //start listening server
+        serverRole = new ServerRole(this);
+        Thread serverThread = new Thread(serverRole);
+        serverThread.start();
+    }
 
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
     
-    public List getPlayerServers() {
+    public synchronized List getPlayerServers() {
         return playerServers;
     }
     
@@ -47,25 +55,25 @@ public class Peer {
         playerHandlers.add(peerHandler);
         currentChoices.add(null);
         scores.add(0);
-        playerServers.add(peerHandler.getServerSocketAddress());
+        playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
     }
     
-    public void handlePeerServerList(List<SocketAddress> serverSocketAddresses) {
+    public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
         String otherPeerIp;
         int port;
         //Connect to all the other (until now unknown) peers 
-        for (SocketAddress socketAddress : serverSocketAddresses) {
-            if (!playerServers.contains(socketAddress)) {
-                InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
-                otherPeerIp = inetSocketAddress.getHostString();
-                port = inetSocketAddress.getPort();
+        for (InetSocketAddress socketAddress : serverSocketAddresses) {
+            if (!playerServers.contains(socketAddress) 
+                    && !socketAddress.equals((InetSocketAddress)serverSocket.getLocalSocketAddress())) {
+                otherPeerIp = socketAddress.getHostString();
+                port = socketAddress.getPort();
                 connectToPeer(otherPeerIp,port);
             }
         }
         System.out.println("Now my playerServers contains " + playerServers);
     }
     
-    public void connectToPeer(String otherPeerIp, int port) {
+    public synchronized void connectToPeer(String otherPeerIp, int port) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
 //            addPlayer(peerHandler);
@@ -77,9 +85,10 @@ public class Peer {
             
             //Create peerhandler with streams, and start its thread
             PeerHandler peerHandler = new PeerHandler(out,in,this);
-            Thread thread = new Thread(peerHandler);
-            thread.start();
-            peerHandler.sendTextMessage("Is there anybody out there?");
+            serverRole.getExecutor().execute(peerHandler);
+//            Thread thread = new Thread(peerHandler);
+//            thread.start();
+//            peerHandler.sendTextMessage("Is there anybody out there?");
             
 //            //Send information about this peer's server-role
 //            peerHandler.sendServerSocketAddress();
@@ -189,7 +198,7 @@ public class Peer {
         }        
     }
     
-    public void testMessage(String msg) {
+    public synchronized void testMessage(String msg) {
         for (PeerHandler peer : playerHandlers) {
             peer.sendTextMessage(msg);
         }
