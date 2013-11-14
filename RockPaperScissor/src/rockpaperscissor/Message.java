@@ -10,7 +10,7 @@ import java.io.Serializable;
 * -ServerSocketAddressToConnecter
 * -PeerServerList
 * -Gesture
-* -Disconnect
+* -DisconnectNotification
 * -TextMessage
 */
 public class Message implements Serializable {

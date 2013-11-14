@@ -128,6 +128,16 @@ class PeerHandler implements Runnable {
         }        
     }
     
+    void sendDisconnectNotification(InetSocketAddress socketAddress) {
+        try {
+            Message msg = new Message("DisconnectNotification",socketAddress);
+            out.writeObject(msg);
+            out.flush();
+        }
+        catch (IOException IOException) {
+        }
+    }
+    
     public synchronized void receiveMessage() {
         Object returnMessage = null;
         try {
@@ -196,6 +206,11 @@ class PeerHandler implements Runnable {
 //                    sendTextMessage("WE COME IN PEACE");
                     //TEST2
                     break;
+                case "DisconnectNotification":
+                    System.out.println("DisconnectNotification received.");
+                    InetSocketAddress disconnectingPeerAddress = (InetSocketAddress) msg.getMsgObj();
+                    me.disconnectOtherPeer(disconnectingPeerAddress);
+                    break;
                     
             }
         }
@@ -213,6 +228,14 @@ class PeerHandler implements Runnable {
         System.out.println("PeerHandler run-method activated!");
         while(true) {
             receiveMessage();
+        }
+    }
+
+    void closeAll() {
+        try {
+            out.close();
+            in.close();
+        } catch (IOException iOException) {
         }
     }
 }

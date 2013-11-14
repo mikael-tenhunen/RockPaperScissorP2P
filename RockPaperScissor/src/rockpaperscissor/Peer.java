@@ -124,10 +124,24 @@ public class Peer {
     }
     
     public synchronized void disconnectMe() {
-        
+        for (PeerHandler ph : playerHandlers) {
+            ph.sendDisconnectNotification((InetSocketAddress)serverSocket.getLocalSocketAddress());
+            ph.closeAll();
+            try {
+                serverSocket.close();
+            } catch (IOException ex) {
+                System.out.println("Problem closing server socket");
+            }
+        }
     }
     
-    public synchronized void disconnectPeer() {
+    public synchronized void disconnectOtherPeer(InetSocketAddress disconnectingPeerAddress) {
+        int index = playerServers.indexOf(disconnectingPeerAddress);
+        playerServers.remove(index);
+        playerHandlers.remove(index);
+        currentChoices.remove(index);
+        scores.remove(index);
+        System.out.println("Removed peer: " + disconnectingPeerAddress);
     }
     
     public synchronized void playGesture(Gesture gesture) {
