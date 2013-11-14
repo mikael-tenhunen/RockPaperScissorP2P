@@ -15,7 +15,7 @@ import rockpaperscissor.Peer;
  * @author Kalle
  */
 public class MainWindow extends javax.swing.JFrame {
-
+    Peer peer;
     /**
      * Creates new form MainWindow
      */
@@ -125,7 +125,8 @@ public class MainWindow extends javax.swing.JFrame {
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        peer.disconnectMe();
+                        System.out.println(peer);
+                        MainWindow.this.peer.disconnectMe();
                         ConnectWindow.startConnectWindow();
                         MainWindow.this.dispose();
 
@@ -212,7 +213,7 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_paperRadioActionPerformed
 
-    public static void startMainWindow(){
+    public static void startMainWindow(final Peer peer){
            /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -239,7 +240,7 @@ public class MainWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                new MainWindow(peer).setVisible(true);
             }
         });
     }
@@ -261,5 +262,5 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JList scoreList;
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
-    private Peer peer;
+    
 }
