@@ -13,24 +13,24 @@ import userinterface.ConnectWindow;
 public class RockPaperScissor {
 
     public static void main(String[] args) {
-//        Scanner in = new Scanner(System.in);
-//        System.out.print("Choose Port to listen to new connections: ");
-//        int port = in.nextInt();
-//        try {
-//            Peer peer = startServer(port);
-//        
-//        //TEST    
-//        testConnect(peer);    
-//        //TEST
-//            
-//        //TEST
-//        sendTestMessage(peer);
-//        //TEST
-//        } catch (IOException ex) {
-//            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        ConnectWindow cw = new ConnectWindow();
-        ConnectWindow.startConnectWindow();
+        Scanner in = new Scanner(System.in);
+        System.out.print("Choose Port to listen to new connections: ");
+        int port = in.nextInt();
+        try {
+            Peer peer = startServer(port);
+        
+        //TEST    
+        testConnect(peer);    
+        //TEST
+            
+        //TEST
+        sendTestMessage(peer);
+        //TEST
+        } catch (IOException ex) {
+            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ConnectWindow cw = new ConnectWindow();
+       // ConnectWindow.startConnectWindow();
     }
     
     public static Peer startServer(int port) throws IOException {
