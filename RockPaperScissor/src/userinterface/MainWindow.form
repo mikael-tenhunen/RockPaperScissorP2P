@@ -206,7 +206,7 @@
         <Property name="text" type="java.lang.String" value="Disconnect"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="disconnectButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {             &#xa;                peer.disconnectMe();&#xa;                ConnectWindow.startConnectWindow();&#xa;                MainWindow.this.dispose();&#xa;                &#xa;            }&#xa;        }    );"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="disconnectButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {             &#xa;                System.out.println(peer);&#xa;                MainWindow.this.peer.disconnectMe();&#xa;                ConnectWindow.startConnectWindow();&#xa;                MainWindow.this.dispose();&#xa;                &#xa;            }&#xa;        }    );"/>
       </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane4">

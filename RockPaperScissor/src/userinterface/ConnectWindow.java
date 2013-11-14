@@ -23,7 +23,6 @@ public class ConnectWindow extends javax.swing.JFrame {
     int remotePortInt;
     String remoteIp;
     Peer peer;
-    Peer peer2;
     /**
      * Creates new form ConnectWindow
      */
@@ -97,14 +96,14 @@ public class ConnectWindow extends javax.swing.JFrame {
                         remotePortInt = Integer.parseInt(remotePort);
                         try
                         {
-                            peer2 = RockPaperScissor.startServer(localPortNumber);
+                            peer = RockPaperScissor.startServer(localPortNumber);
                         }
                         catch(IOException exep)
                         {
                         }
-                        peer2.connectToPeer(remoteIp, remotePortInt, true);
+                        peer.connectToPeer(remoteIp, remotePortInt, true);
                         ConnectWindow.this.dispose();
-                        MainWindow.startMainWindow();
+                        MainWindow.startMainWindow(ConnectWindow.this.peer);
                     }
 
                 }
@@ -142,7 +141,7 @@ public class ConnectWindow extends javax.swing.JFrame {
                                 {
                                 }
                                 ConnectWindow.this.dispose();
-                                MainWindow.startMainWindow();
+                                MainWindow.startMainWindow(ConnectWindow.this.peer);
 
                             }
 
