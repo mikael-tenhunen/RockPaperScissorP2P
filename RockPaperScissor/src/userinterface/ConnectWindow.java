@@ -6,6 +6,9 @@ package userinterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import rockpaperscissor.Peer;
 import rockpaperscissor.RockPaperScissor;
@@ -89,7 +92,13 @@ public class ConnectWindow extends javax.swing.JFrame {
                     {
                         localPortNumber = Integer.parseInt(localPort);
                         remotePortInt = Integer.parseInt(remotePort);
-                        peer2 = RockPaperScissor.startServer(localPortNumber);
+                        try
+                        {
+                            peer2 = RockPaperScissor.startServer(localPortNumber);
+                        }
+                        catch(IOException exep)
+                        {
+                        }
                         peer2.connectToPeer(remoteIp, remotePortInt);
                         ConnectWindow.this.dispose();
                         MainWindow mainWindow = new MainWindow();
@@ -99,7 +108,7 @@ public class ConnectWindow extends javax.swing.JFrame {
             }    );
 
             exitButton.setText("Exit");
-            startButton.addActionListener(new ActionListener()
+            exitButton.addActionListener(new ActionListener()
                 {
                     public void actionPerformed(ActionEvent e)
                     {
@@ -114,16 +123,24 @@ public class ConnectWindow extends javax.swing.JFrame {
                         public void actionPerformed(ActionEvent e)
                         {
                             String localPort = localPortField.getText();
-                            if (localPort==null || localPort=="")
+                            if (localPort==null)
                             {
                                 JOptionPane.showMessageDialog(null, "You need to enter a Local Port");
                             }
                             else
                             {
                                 portInt = Integer.parseInt(localPort);
-                                peer = RockPaperScissor.startServer(portInt);
+                                try
+                                {
+                                    peer = RockPaperScissor.startServer(portInt);
+                                    RockPaperScissor.testConnect(peer);
+                                }
+                                catch(IOException exep)
+                                {
+                                }
                                 ConnectWindow.this.dispose();
                                 MainWindow mainWindow = new MainWindow();
+
                             }
 
                         }
