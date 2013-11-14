@@ -64,7 +64,7 @@ public class Peer {
         int port;
         //Connect to all the other (until now unknown) peers 
         for (InetSocketAddress socketAddress : serverSocketAddresses) {
-            if (!playerServers.contains(socketAddress) 
+            if (playerServers.contains(socketAddress)==false 
                     && !socketAddress.equals((InetSocketAddress)serverSocket.getLocalSocketAddress())) {
                 otherPeerIp = socketAddress.getHostString();
                 port = socketAddress.getPort();
