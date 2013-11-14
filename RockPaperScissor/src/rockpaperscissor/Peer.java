@@ -3,6 +3,7 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -37,11 +38,31 @@ public class Peer {
         return serverSocket;
     }
     
+    public List getPlayerServers() {
+        return playerServers;
+    }
+    
     //addPlayer is called when the serversocket accepts new player connection
-    public void addPlayer(PeerHandler peerHandler) {
+    public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
         currentChoices.add(null);
         scores.add(0);
+        playerServers.add(peerHandler.getServerSocketAddress());
+    }
+    
+    public void handlePeerServerList(List<SocketAddress> serverSocketAddresses) {
+        String otherPeerIp;
+        int port;
+        //Connect to all the other (until now unknown) peers 
+        for (SocketAddress socketAddress : serverSocketAddresses) {
+            if (!playerServers.contains(socketAddress)) {
+                InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+                otherPeerIp = inetSocketAddress.getHostString();
+                port = inetSocketAddress.getPort();
+                connectToPeer(otherPeerIp,port);
+            }
+        }
+        System.out.println("Now my playerServers contains " + playerServers);
     }
     
     public void connectToPeer(String otherPeerIp, int port) {
@@ -51,35 +72,57 @@ public class Peer {
             //LIGG OCH LYSSNA ConnectBackRequest
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            Object returnMessage = null;
-            SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
-            //Send local server address to the other peer so it can
-            //connect to this peer and this peer creates a PeerHandler for it
-            Message msg = new Message("ServerSocketAddress", localServerAddress);
-            //write message to output stream
-            out.writeObject (msg);
-            out.flush();
+//            Object returnMessage = null;
+//            SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
+            
+            //Create peerhandler with streams, and start its thread
+            PeerHandler peerHandler = new PeerHandler(out,in,this);
+            Thread thread = new Thread(peerHandler);
+            thread.start();
+            peerHandler.sendTextMessage("Is there anybody out there?");
+            
+//            //Send information about this peer's server-role
+//            peerHandler.sendServerSocketAddress();
+            
+            
+//            //Send local server address to the other peer so it can
+//            //connect to this peer and this peer creates a PeerHandler for it
+////            Message msg = new Message("ServerSocketAddress", localServerAddress);
+//            Message msg = new Message("TextMessage", "HELLO FROM SPACE!");
+//            //write message to output stream
+//            out.writeObject (msg);
+//            out.flush();
+//            try {
+//                Object receivedMessage = null;
+//                while (receivedMessage == null) {
+//                    receivedMessage = in.readObject ();
+//                }
+//                Message receivedMsg = (Message) receivedMessage;
+//                System.out.println(receivedMsg.getMsgObj());
+//            } catch (ClassNotFoundException ex) {
+//                    Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);                
+//            }          
             
         } catch (IOException ex) {
             Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void disconnect() {
+    public synchronized void disconnectMe() {
         
     }
     
-    public void deletePeer() {
+    public synchronized void disconnectPeer() {
     }
     
-    public void playGesture(Gesture gesture) {
+    public synchronized void playGesture(Gesture gesture) {
         for(PeerHandler peerHandler : playerHandlers) {
             peerHandler.sendGesture(gesture);
         }
         myCurrentGesture = gesture;
     }
 
-    public void updateGameState(PeerHandler peerHandler, Gesture gesture) {
+    public synchronized void updateGameState(PeerHandler peerHandler, Gesture gesture) {
         int index = playerHandlers.indexOf(peerHandler);
         currentChoices.set(index, gesture);
         //Calculate score if all results are in
@@ -92,7 +135,7 @@ public class Peer {
         }
     }
     
-    public void calculateScore() {
+    public synchronized void calculateScore() {
         int nrOfPlayers = currentChoices.size();
         int papers = 0;
         int rocks = 0;

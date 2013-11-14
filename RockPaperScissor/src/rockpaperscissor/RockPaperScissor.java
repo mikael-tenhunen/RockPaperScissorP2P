@@ -17,6 +17,10 @@ public class RockPaperScissor {
         int port = in.nextInt();
         try {
             Peer peer = startServer(port);
+        
+        //TEST    
+        testConnect(peer);    
+        //TEST
             
         //TEST
         sendTestMessage(peer);
@@ -47,5 +51,15 @@ public class RockPaperScissor {
         System.out.print("Write a message: ");
         String message = in.nextLine();
         peer.testMessage(message);
+    }
+    
+    public static void testConnect(Peer peer) {
+        Scanner in = new Scanner(System.in);
+        System.out.print("If you want to connect to another peer's port, enter"
+                + " port nr (otherwise enter 0): ");
+        int port = in.nextInt();
+        if (port != 0) {
+            peer.connectToPeer("localhost",port);
+        }
     }
 }
