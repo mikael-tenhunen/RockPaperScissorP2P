@@ -13,7 +13,6 @@ public class RockPaperScissor {
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        
         System.out.print("Choose Port to listen to new connections: ");
         int port = in.nextInt();
         try {

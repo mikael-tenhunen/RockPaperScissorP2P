@@ -57,7 +57,7 @@ class PeerHandler implements Runnable {
             out.writeObject(msg + "\n");
             out.flush();
         }
-        catch (IOException iOException) {
+        catch (IOException IOException) {
         }
     }
     
