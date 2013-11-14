@@ -58,7 +58,7 @@ public class RockPaperScissor {
                 + " port nr (otherwise enter 0): ");
         int port = in.nextInt();
         if (port != 0) {
-            peer.connectToPeer("localhost",port);
+            peer.connectToPeer("localhost",port,true);
         }
     }
 }
