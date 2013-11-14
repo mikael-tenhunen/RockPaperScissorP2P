@@ -10,7 +10,6 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -28,77 +27,72 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jScrollPane4" min="-2" pref="86" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" min="-2" pref="104" max="-2" attributes="0"/>
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="0" pref="4" max="32767" attributes="0"/>
-                      <Component id="disconnectButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
-                      <Component id="rockRadio" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="paperRadio" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="scissorRadio" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
+              <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
+              <Component id="disconnectButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="33" max="32767" attributes="0"/>
+              <Component id="rockRadio" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+              <Component id="paperRadio" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="scissorRadio" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+              <Component id="sendButton" min="-2" pref="111" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane2" min="-2" pref="93" max="-2" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                      <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="97" pref="97" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="50" pref="50" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sendButton" min="-2" pref="93" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
+                      <Component id="jScrollPane4" min="-2" pref="86" max="-2" attributes="0"/>
+                      <EmptySpace min="46" pref="46" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="104" max="-2" attributes="0"/>
+                      <EmptySpace min="41" pref="41" max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" pref="93" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" alignment="3" min="-2" pref="12" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" pref="12" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="28" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="rockRadio" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="paperRadio" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="scissorRadio" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="sendButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="disconnectButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="disconnectButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="sendButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                          <Component id="paperRadio" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scissorRadio" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rockRadio" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -198,7 +192,7 @@
         <Property name="text" type="java.lang.String" value="Send Choice"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sendButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {&#xa;                if(rockRadio.isSelected() == true)&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.ROCK);&#xa;                }&#xa;                else if(paperRadio.isSelected() == true)&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.PAPER);&#xa;                }&#xa;                else if(scissorRadio.isSelected() == true)&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.SCISSOR);&#xa;                }&#xa;                else&#xa;                {&#xa;                    JOptionPane.showMessageDialog(null, &quot;You need to pick your gesture&quot;);&#xa;                }   &#xa;            }&#xa;        }    );"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sendButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {&#xa;                if(rockRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.ROCK);&#xa;                }&#xa;                else if(paperRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.PAPER);&#xa;                }&#xa;                else if(scissorRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.SCISSOR);&#xa;                }&#xa;                else&#xa;                {&#xa;                    JOptionPane.showMessageDialog(null, &quot;You need to pick your gesture&quot;);&#xa;                }   &#xa;              &#xa;&#xa;&#xa;            }&#xa;        }    );"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="disconnectButton">
@@ -206,7 +200,7 @@
         <Property name="text" type="java.lang.String" value="Disconnect"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="disconnectButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {             &#xa;                System.out.println(peer);&#xa;                MainWindow.this.peer.disconnectMe();&#xa;                ConnectWindow.startConnectWindow();&#xa;                MainWindow.this.dispose();&#xa;                &#xa;            }&#xa;        }    );"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="disconnectButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {             &#xa;                MainWindow.this.peer.disconnectMe();&#xa;                ConnectWindow.startConnectWindow();&#xa;                MainWindow.this.dispose();&#xa;                &#xa;            }&#xa;        }    );"/>
       </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane4">
