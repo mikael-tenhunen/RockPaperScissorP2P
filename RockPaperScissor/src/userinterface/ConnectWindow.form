@@ -109,6 +109,9 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="remoteIpFieldActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="remoteIpField.setText(&quot;127.0.0.1&quot;);"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="connectButton">
       <Properties>

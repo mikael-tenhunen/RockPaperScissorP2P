@@ -101,15 +101,15 @@ public class MainWindow extends javax.swing.JFrame {
             {
                 public void actionPerformed(ActionEvent e)
                 {
-                    if(rockRadio.isSelected() == true)
+                    if(rockRadio.isSelected())
                     {
                         MainWindow.this.peer.playGesture(Gesture.ROCK);
                     }
-                    else if(paperRadio.isSelected() == true)
+                    else if(paperRadio.isSelected())
                     {
                         MainWindow.this.peer.playGesture(Gesture.PAPER);
                     }
-                    else if(scissorRadio.isSelected() == true)
+                    else if(scissorRadio.isSelected())
                     {
                         MainWindow.this.peer.playGesture(Gesture.SCISSOR);
                     }
