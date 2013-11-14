@@ -126,7 +126,6 @@ public class MainWindow extends javax.swing.JFrame {
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        System.out.println(peer);
                         MainWindow.this.peer.disconnectMe();
                         ConnectWindow.startConnectWindow();
                         MainWindow.this.dispose();
