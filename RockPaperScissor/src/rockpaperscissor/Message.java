@@ -5,8 +5,9 @@ import java.io.Serializable;
 /* Message types are Strings:
 * -ServerSocketAddressRequestFromListener
 * -ServerSocketAddressRequestFromConnecter
-* -ServerSocketAddressListener
-* -ServerSocketAddressConnecter
+* -ServerSocketAddressToListener
+* -ServerSocketAddressToListenerNoList
+* -ServerSocketAddressToConnecter
 * -PeerServerList
 * -Gesture
 * -Disconnect

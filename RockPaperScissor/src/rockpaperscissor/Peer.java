@@ -57,6 +57,7 @@ public class Peer {
         scores.add(0);
         playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
         System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
+        System.out.println("Now my playerServers contains " + playerServers);
     }
     
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
@@ -68,13 +69,17 @@ public class Peer {
                     && !socketAddress.equals((InetSocketAddress)serverSocket.getLocalSocketAddress())) {
                 otherPeerIp = socketAddress.getHostString();
                 port = socketAddress.getPort();
-                connectToPeer(otherPeerIp,port);
+                //sendMePeerList-flag is set to false
+                connectToPeer(otherPeerIp,port,false);
             }
         }
         System.out.println("Now my playerServers contains " + playerServers);
     }
     
-    public synchronized void connectToPeer(String otherPeerIp, int port) {
+    //sendMePeerList is a flag that shows if we are interested in getting the peerlist from 
+    //the remote peer or not. If we are connecting to all peers in an already received
+    //peerServerList, we are not interested in getting new lists.
+    public synchronized void connectToPeer(String otherPeerIp, int port, boolean sendMePeerList) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
 //            addPlayer(peerHandler);
@@ -85,7 +90,7 @@ public class Peer {
 //            SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
             
             //Create peerhandler with streams, and start its thread
-            PeerHandler peerHandler = new PeerHandler(out,in,this);
+            PeerHandler peerHandler = new PeerHandler(out,in,this,sendMePeerList);
             serverRole.getExecutor().execute(peerHandler);
 //            Thread thread = new Thread(peerHandler);
 //            thread.start();

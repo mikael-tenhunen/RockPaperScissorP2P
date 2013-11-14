@@ -18,6 +18,7 @@ class PeerHandler implements Runnable {
     ObjectInputStream in;
     ObjectOutputStream out;
     InetSocketAddress serverSocketAddress;
+    boolean sendMePeerList;
     
     //This is the constructor used when someone has called this peer's server-role.
     //It sends a message requesting serverSocketAddress, so that the other side
@@ -25,6 +26,7 @@ class PeerHandler implements Runnable {
     public PeerHandler(Socket peerSocket, Peer me) {
         this.peerSocket = peerSocket;
         this.me = me;
+        sendMePeerList = true;
         try {
             System.out.println("Trying to initialize input- output streams in PeerHandler");
             out = new ObjectOutputStream(peerSocket.getOutputStream());
@@ -38,11 +40,12 @@ class PeerHandler implements Runnable {
 
     //Constructor to be called when this peer has called someone else's server-
     //role. It also sends a serverSocketAddressRequest
-    PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me) {
+    PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me, boolean sendMePeerList) {
         this.in = in;
         this.out = out;
         peerSocket = null;
         this.me = me;
+        this.sendMePeerList = sendMePeerList;
         sendServerSocketAddressRequest("ServerSocketAddressRequestFromConnecter");
     }
     
@@ -61,10 +64,24 @@ class PeerHandler implements Runnable {
     
     //Sends this peer's server-role socket address
     //type can be: 
+    // ServerSocketAddressToListener
+    // ServerSocketAddressToConnecter
     //
-    //
+    // There is no type ServerSocketAddressToListenerNoList because this is
+    // equivalent to what happens when ServerSocketAddressToConnecter is type
+    // 
+    //Also checks if this PeerHandler wants peerServerList from the remote peer.
+    //If the remote peer had a listener-role in relation to this peer, we send
+    //either a ServerSocketAddressToListener or a 
+    //ServerSocketAddressToListenerNoList
     public synchronized void sendServerSocketAddress(String type) {
         try {
+            if ((type == "ServerSocketAddressToListener") && !sendMePeerList) {
+                //this is essentially setting type to
+                //ServerSocketAddressToListenerNoList, but we don't want duplicate
+                //cases in message receiver
+                type = "ServerSocketAddressToConnecter";
+            }
             InetSocketAddress serverToConnectTo = (InetSocketAddress) me.getServerSocket().getLocalSocketAddress();
             Message msg = new Message(type, serverToConnectTo);
             out.writeObject(msg);
@@ -121,7 +138,7 @@ class PeerHandler implements Runnable {
             String type = msg.getType();
             
             switch(type) {
-                case "ServerSocketAddressListener":
+                case "ServerSocketAddressToListener":
                     InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
                     serverSocketAddress = serverConnecter;
 //                    System.out.println("serverSocketAddress received!");
@@ -141,16 +158,22 @@ class PeerHandler implements Runnable {
 //                    System.out.println("peerhandler's local socket at port: " + peerSocket.getLocalSocketAddress());
 //                    System.out.println("peerhandler's remote socket at port: " + peerSocket.getRemoteSocketAddress());
                     break;
-                case "ServerSocketAddressConnecter":
+//                case "ServerSocketAddressToListenerNoList":
+//                    InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
+//                    serverSocketAddress = serverConnecter;
+//                    sendPeerServerList();
+//                    me.addPlayer(this);
+//                    break;
+                case "ServerSocketAddressToConnecter":
                     InetSocketAddress serverListener = (InetSocketAddress) msg.getMsgObj();
                     serverSocketAddress = serverListener;
                     me.addPlayer(this);
                     break;
                 case "ServerSocketAddressRequestFromConnecter":
-                    sendServerSocketAddress("ServerSocketAddressConnecter");
+                    sendServerSocketAddress("ServerSocketAddressToConnecter");
                     break;
                 case "ServerSocketAddressRequestFromListener":
-                    sendServerSocketAddress("ServerSocketAddressListener");
+                    sendServerSocketAddress("ServerSocketAddressToListener");
                     break;
                 case "PeerServerList":
                     List<InetSocketAddress> serverSocketAddressList = (List<InetSocketAddress>) msg.getMsgObj();
