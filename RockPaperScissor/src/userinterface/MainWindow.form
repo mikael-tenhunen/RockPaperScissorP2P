@@ -44,21 +44,22 @@
               <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="97" pref="97" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="50" pref="50" max="-2" attributes="0"/>
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="jScrollPane4" min="-2" pref="204" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="jScrollPane4" min="-2" pref="86" max="-2" attributes="0"/>
-                      <EmptySpace min="46" pref="46" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="104" max="-2" attributes="0"/>
-                      <EmptySpace min="41" pref="41" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="93" max="-2" attributes="0"/>
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane2" min="-2" pref="68" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -68,17 +69,26 @@
               <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
-                      <Component id="jLabel2" min="-2" pref="12" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel2" alignment="3" min="-2" pref="12" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
-              <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -106,13 +116,7 @@
         <Component class="javax.swing.JList" name="choicesList">
           <Properties>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-              <StringArray count="5">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-                <StringItem index="4" value="Item 5"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
         </Component>
@@ -131,17 +135,6 @@
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
         <Component class="javax.swing.JList" name="scoreList">
-          <Properties>
-            <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-              <StringArray count="5">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-                <StringItem index="4" value="Item 5"/>
-              </StringArray>
-            </Property>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
@@ -190,7 +183,7 @@
         <Property name="text" type="java.lang.String" value="Send Choice"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sendButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {&#xa;                if(rockRadio.isSelected())&#xa;                {&#xa;                    System.out.println(&quot;yes, rock was selected&quot;);&#xa;                    Thread t = new Thread() {&#xa;                        public void run() {&#xa;                            System.out.println(&quot;Inside run method of rock selected&quot;);&#xa;                            System.out.println(&quot;Peer object: &quot; + peer);&#xa;                            MainWindow.this.peer.testMessage(&quot;HELLO!!&quot;);&#xa;                            MainWindow.this.peer.playGesture(Gesture.ROCK);&#xa;                            &#xa;                        }&#xa;                    };&#xa;                    t.start();          &#xa;//                    MainWindow.this.peer.playGesture(Gesture.ROCK);&#xa;                }&#xa;                else if(paperRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.PAPER);&#xa;                }&#xa;                else if(scissorRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.SCISSOR);&#xa;                }&#xa;                else&#xa;                {&#xa;                    JOptionPane.showMessageDialog(null, &quot;You need to pick your gesture&quot;);&#xa;                }   &#xa;              &#xa;&#xa;&#xa;            }&#xa;        }    );"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="sendButton.addActionListener(new ActionListener()&#xa;        {&#xa;            public void actionPerformed(ActionEvent e)&#xa;            {&#xa;                if(rockRadio.isSelected())&#xa;                {      &#xa;                    MainWindow.this.peer.playGesture(Gesture.ROCK);&#xa;                }&#xa;                else if(paperRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.PAPER);&#xa;                }&#xa;                else if(scissorRadio.isSelected())&#xa;                {&#xa;                    MainWindow.this.peer.playGesture(Gesture.SCISSOR);&#xa;                }&#xa;                else&#xa;                {&#xa;                    JOptionPane.showMessageDialog(null, &quot;You need to pick your gesture&quot;);&#xa;                }   &#xa;              &#xa;&#xa;&#xa;            }&#xa;        }    );"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="disconnectButton">
@@ -211,12 +204,8 @@
         <Component class="javax.swing.JList" name="playerList">
           <Properties>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-              <StringArray count="5">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
-                <StringItem index="4" value="Item 5"/>
+              <StringArray count="1">
+                <StringItem index="0" value="Currently no players..."/>
               </StringArray>
             </Property>
           </Properties>

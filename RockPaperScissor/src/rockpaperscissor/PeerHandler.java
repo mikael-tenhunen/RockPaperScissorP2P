@@ -8,6 +8,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * PeerHandler listens for incoming gestures.
@@ -52,7 +54,7 @@ class PeerHandler implements Runnable {
     // type can be
     // ServerSocketAddressRequestFromListener
     // ServerSocketAddressRequestFromConnecter
-    public synchronized void sendServerSocketAddressRequest(String type) {
+    public void sendServerSocketAddressRequest(String type) {
         try {
             Message msg = new Message(type,null);
             out.writeObject(msg);
@@ -74,7 +76,7 @@ class PeerHandler implements Runnable {
     //If the remote peer had a listener-role in relation to this peer, we send
     //either a ServerSocketAddressToListener or a 
     //ServerSocketAddressToListenerNoList
-    public synchronized void sendServerSocketAddress(String type) {
+    public void sendServerSocketAddress(String type) {
         try {
             if ((type == "ServerSocketAddressToListener") && !sendMePeerList) {
                 //this is essentially setting type to
@@ -93,7 +95,7 @@ class PeerHandler implements Runnable {
 
     //Sends this peer's list of peer server socket addresses, so that a peer
     //joining the network can establish connections with all other peers
-    public synchronized void sendPeerServerList() {
+    public void sendPeerServerList() {
         try {
             System.out.println("Now in sendPeerServerList in PeerHandler...");
             Message msg = new Message("PeerServerList",me.getPlayerServers());
@@ -106,7 +108,7 @@ class PeerHandler implements Runnable {
     }
     
     //Sends game gesture
-    public synchronized void sendGesture(Gesture gesture) {
+    public void sendGesture(Gesture gesture) {
         System.out.println("Gesture about to be sent from PeerHandler");
         try {
             Message msg = new Message("Gesture",gesture);
@@ -117,7 +119,7 @@ class PeerHandler implements Runnable {
         }
     }
     
-    public synchronized void sendTextMessage(String textMessage) {
+    public void sendTextMessage(String textMessage) {
         try {
             //System.out.println("Sending text message to: " + peerSocket.getRemoteSocketAddress());
             System.out.println("Sending text message");
@@ -139,7 +141,7 @@ class PeerHandler implements Runnable {
         }
     }
     
-    public synchronized void receiveMessage() {
+    public void receiveMessage() {
         Object returnMessage = null;
         try {
             while (returnMessage == null) {

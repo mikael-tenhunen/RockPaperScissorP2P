@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import userinterface.MainWindow;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Peer {
     private Gesture myCurrentGesture;
     private ServerRole serverRole;
     private int myScore;
+    private MainWindow mainWindow;
     
     
     public Peer(ServerSocket socket) {
@@ -35,6 +37,11 @@ public class Peer {
         scores = new ArrayList();
         myScore = 0;
         myCurrentGesture = null;
+    }
+    
+    public void setMainWindow(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+        showListsInGui();
     }
     
     public void startServerRole() {
@@ -164,6 +171,7 @@ public class Peer {
         //Calculate score if all results are in
         if (!currentChoices.contains(null)) {
             calculateScore();
+            showListsInGui();
             //nullify gesture list when scores are calculated
             for(Gesture g : currentChoices) {
                 g = null;
@@ -223,6 +231,28 @@ public class Peer {
                 scores.set(i, scores.get(i)+score);
             }
         }        
+    }
+    
+    public void showListsInGui() {
+//        private List<InetSocketAddress> playerServers;
+//        private List<PeerHandler> playerHandlers;
+//        private List<Gesture> currentChoices;
+//        private List<Integer> scores;
+//        private ServerSocket serverSocket;
+//        private Gesture myCurrentGesture;
+//        private ServerRole serverRole;
+//        private int myScore;
+        
+        List<Gesture> allGestures = new ArrayList(currentChoices);
+        allGestures.add(0,myCurrentGesture);
+        
+        List<Integer> allScores = new ArrayList(scores);
+        allScores.add(0,myScore);
+        
+        List<InetSocketAddress> allPlayerServers = new ArrayList(playerServers);
+        allPlayerServers.add(0,(InetSocketAddress)serverSocket.getLocalSocketAddress());
+        
+        mainWindow.updateLists(allGestures, allScores, allPlayerServers);
     }
     
     public synchronized void testMessage(String msg) {

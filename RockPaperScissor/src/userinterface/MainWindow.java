@@ -6,7 +6,11 @@ package userinterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetSocketAddress;
+import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import rockpaperscissor.Gesture;
 import rockpaperscissor.Peer;
 
@@ -20,14 +24,15 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Creates new form MainWindow
      */
-    public MainWindow() {
-        initComponents();
-    }
+//    public MainWindow() {
+//        initComponents();
+//    }
     
     
     public MainWindow(Peer peer) {
         this.peer = peer;
         initComponents();
+        peer.setMainWindow(this);
     }
 
     /**
@@ -57,20 +62,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        choicesList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(choicesList);
 
         jLabel1.setText("This round's choices");
 
-        scoreList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(scoreList);
 
         jLabel2.setText("Total score");
@@ -103,18 +98,7 @@ public class MainWindow extends javax.swing.JFrame {
                 {
                     if(rockRadio.isSelected())
                     {
-                        System.out.println("yes, rock was selected");
-                        Thread t = new Thread() {
-                            public void run() {
-                                System.out.println("Inside run method of rock selected");
-                                System.out.println("Peer object: " + peer);
-                                MainWindow.this.peer.testMessage("HELLO!!");
-                                MainWindow.this.peer.playGesture(Gesture.ROCK);
-
-                            }
-                        };
-                        t.start();
-                        //                    MainWindow.this.peer.playGesture(Gesture.ROCK);
+                        MainWindow.this.peer.playGesture(Gesture.ROCK);
                     }
                     else if(paperRadio.isSelected())
                     {
@@ -145,7 +129,7 @@ public class MainWindow extends javax.swing.JFrame {
                 }    );
 
                 playerList.setModel(new javax.swing.AbstractListModel() {
-                    String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+                    String[] strings = { "Currently no players..." };
                     public int getSize() { return strings.length; }
                     public Object getElementAt(int i) { return strings[i]; }
                 });
@@ -171,18 +155,18 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(97, 97, 97)
-                                .addComponent(jLabel1)
-                                .addGap(50, 50, 50)
-                                .addComponent(jLabel2))
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(46, 46, 46)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(46, 46, 46))
                 );
                 layout.setVerticalGroup(
                     layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,15 +174,20 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(11, 11, 11)
+                                .addGap(3, 3, 3)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1))))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(disconnectButton)
@@ -270,4 +259,24 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JList scoreList;
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
+
+    public void updateLists(List<Gesture> allGestures, List<Integer> allScores, List<InetSocketAddress> allPlayerServers) {
+        DefaultListModel<Gesture> gestureListModel = new DefaultListModel();
+        for (Gesture score : allGestures) {
+            gestureListModel.addElement(score);
+        }
+        choicesList.setModel(gestureListModel);        
+        
+        DefaultListModel<Integer> scoreListModel = new DefaultListModel();
+        for (Integer score : allScores) {
+            scoreListModel.addElement(score);
+        }
+        scoreList.setModel(scoreListModel);
+   
+        DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
+        for (InetSocketAddress address : allPlayerServers) {
+            playerServerListModel.addElement(address);
+        }
+        playerList.setModel(playerServerListModel);
+    }
 }
