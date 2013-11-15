@@ -67,6 +67,8 @@ public class Peer {
         playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
         System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
         System.out.println("Now my playerServers contains " + playerServers);
+        showPlayerServersInGui();
+        showScoresInGui();
     }
     
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
@@ -151,6 +153,8 @@ public class Peer {
         currentChoices.remove(index);
         scores.remove(index);
         System.out.println("Removed peer: " + disconnectingPeerAddress);
+        showPlayerServersInGui();
+        showScoresInGui();
     }
     
     public synchronized void playGesture(Gesture gesture) {
@@ -171,11 +175,12 @@ public class Peer {
         //Calculate score if all results are in
         if (!currentChoices.contains(null)) {
             calculateScore();
-            showListsInGui();
             //nullify gesture list when scores are calculated
             for(Gesture g : currentChoices) {
                 g = null;
             }
+            showScoresInGui();
+            showGesturesInGui();
         }
     }
     
@@ -233,26 +238,28 @@ public class Peer {
         }        
     }
     
-    public void showListsInGui() {
-//        private List<InetSocketAddress> playerServers;
-//        private List<PeerHandler> playerHandlers;
-//        private List<Gesture> currentChoices;
-//        private List<Integer> scores;
-//        private ServerSocket serverSocket;
-//        private Gesture myCurrentGesture;
-//        private ServerRole serverRole;
-//        private int myScore;
-        
+    public void showGesturesInGui() {
         List<Gesture> allGestures = new ArrayList(currentChoices);
         allGestures.add(0,myCurrentGesture);
-        
+        mainWindow.updateGestures(allGestures);
+    }
+
+    public void showScoresInGui() {
         List<Integer> allScores = new ArrayList(scores);
         allScores.add(0,myScore);
-        
+        mainWindow.updateScores(allScores);
+    }
+    
+    public void showPlayerServersInGui() {
         List<InetSocketAddress> allPlayerServers = new ArrayList(playerServers);
         allPlayerServers.add(0,(InetSocketAddress)serverSocket.getLocalSocketAddress());
-        
-        mainWindow.updateLists(allGestures, allScores, allPlayerServers);
+        mainWindow.updatePlayers(allPlayerServers);
+    }    
+    
+    public void showListsInGui() {    
+        showGesturesInGui();
+        showScoresInGui();
+        showPlayerServersInGui();
     }
     
     public synchronized void testMessage(String msg) {

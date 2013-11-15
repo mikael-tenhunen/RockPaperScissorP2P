@@ -260,23 +260,47 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
 
-    public void updateLists(List<Gesture> allGestures, List<Integer> allScores, List<InetSocketAddress> allPlayerServers) {
+//    public void updateLists(List<Gesture> allGestures, List<Integer> allScores, List<InetSocketAddress> allPlayerServers) {
+//        DefaultListModel<Gesture> gestureListModel = new DefaultListModel();
+//        for (Gesture score : allGestures) {
+//            gestureListModel.addElement(score);
+//        }
+//        choicesList.setModel(gestureListModel);        
+//        
+//        DefaultListModel<Integer> scoreListModel = new DefaultListModel();
+//        for (Integer score : allScores) {
+//            scoreListModel.addElement(score);
+//        }
+//        scoreList.setModel(scoreListModel);
+//   
+//        DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
+//        for (InetSocketAddress address : allPlayerServers) {
+//            playerServerListModel.addElement(address);
+//        }
+//        playerList.setModel(playerServerListModel);
+//    }
+    
+    public void updateGestures(List<Gesture> allGestures) {
         DefaultListModel<Gesture> gestureListModel = new DefaultListModel();
         for (Gesture score : allGestures) {
             gestureListModel.addElement(score);
         }
-        choicesList.setModel(gestureListModel);        
-        
-        DefaultListModel<Integer> scoreListModel = new DefaultListModel();
+        choicesList.setModel(gestureListModel);   
+    }
+    
+    public void updateScores(List<Integer> allScores) {
+         DefaultListModel<Integer> scoreListModel = new DefaultListModel();
         for (Integer score : allScores) {
             scoreListModel.addElement(score);
         }
-        scoreList.setModel(scoreListModel);
-   
+        scoreList.setModel(scoreListModel);       
+    }
+    
+    public void updatePlayers(List<InetSocketAddress> allPlayerServers) {
         DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
         for (InetSocketAddress address : allPlayerServers) {
             playerServerListModel.addElement(address);
         }
-        playerList.setModel(playerServerListModel);
+        playerList.setModel(playerServerListModel);        
     }
 }
