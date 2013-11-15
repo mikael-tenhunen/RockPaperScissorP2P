@@ -64,7 +64,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(choicesList);
 
-        jLabel1.setText("This round's choices");
+        jLabel1.setText("Last round's choices");
 
         jScrollPane2.setViewportView(scoreList);
 
@@ -112,6 +112,8 @@ public class MainWindow extends javax.swing.JFrame {
                     {
                         JOptionPane.showMessageDialog(null, "You need to pick your gesture");
                     }
+
+                    sendButton.setEnabled(false);
 
                 }
             }    );
@@ -179,15 +181,15 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel1))))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(11, 11, 11)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane4)
+                                    .addComponent(jScrollPane1)))
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jScrollPane2)))
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(disconnectButton)
@@ -196,7 +198,7 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addComponent(scissorRadio)
                                 .addComponent(rockRadio))
                             .addComponent(sendButton))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(13, Short.MAX_VALUE))
                 );
 
                 pack();
@@ -302,5 +304,9 @@ public class MainWindow extends javax.swing.JFrame {
             playerServerListModel.addElement(address);
         }
         playerList.setModel(playerServerListModel);        
+    }
+
+    public void allowGestureSend() {
+        sendButton.setEnabled(true);
     }
 }

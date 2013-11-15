@@ -3,8 +3,6 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.util.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import userinterface.ConnectWindow;
 /**
  *

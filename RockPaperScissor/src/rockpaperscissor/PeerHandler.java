@@ -195,7 +195,7 @@ class PeerHandler implements Runnable {
                 case "Gesture":
                     Gesture gesture = (Gesture) msg.getMsgObj();
                     System.out.println("Gesture received...");
-                    me.updateGameState(this,gesture);
+                    me.updateOpponentGesture(this, gesture);
                     break;
                 case "TextMessage":
                     System.out.println("Received text message");

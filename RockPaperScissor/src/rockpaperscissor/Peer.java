@@ -6,11 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import userinterface.MainWindow;
 
 /**
@@ -36,7 +33,7 @@ public class Peer {
         currentChoices = new ArrayList();
         scores = new ArrayList();
         myScore = 0;
-        myCurrentGesture = null;
+        myCurrentGesture = Gesture.UNKNOWN;
     }
     
     public void setMainWindow(MainWindow mainWindow) {
@@ -62,7 +59,7 @@ public class Peer {
     //addPlayer is called when the serversocket accepts new player connection
     public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
-        currentChoices.add(null);
+        currentChoices.add(Gesture.UNKNOWN);
         scores.add(0);
         playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
         System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
@@ -96,41 +93,13 @@ public class Peer {
 //            addPlayer(peerHandler);
             //LIGG OCH LYSSNA ConnectBackRequest
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-//            Object returnMessage = null;
-//            SocketAddress localServerAddress = serverSocket.getLocalSocketAddress();
-            
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());            
             //Create peerhandler with streams, and start its thread
             PeerHandler peerHandler = new PeerHandler(out,in,this,sendMePeerList);
-            serverRole.getExecutor().execute(peerHandler);
-//            Thread thread = new Thread(peerHandler);
-//            thread.start();
-//            peerHandler.sendTextMessage("Is there anybody out there?");
-            
-//            //Send information about this peer's server-role
-//            peerHandler.sendServerSocketAddress();
-            
-            
-//            //Send local server address to the other peer so it can
-//            //connect to this peer and this peer creates a PeerHandler for it
-////            Message msg = new Message("ServerSocketAddress", localServerAddress);
-//            Message msg = new Message("TextMessage", "HELLO FROM SPACE!");
-//            //write message to output stream
-//            out.writeObject (msg);
-//            out.flush();
-//            try {
-//                Object receivedMessage = null;
-//                while (receivedMessage == null) {
-//                    receivedMessage = in.readObject ();
-//                }
-//                Message receivedMsg = (Message) receivedMessage;
-//                System.out.println(receivedMsg.getMsgObj());
-//            } catch (ClassNotFoundException ex) {
-//                    Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);                
-//            }          
-            
+            serverRole.getExecutor().execute(peerHandler);           
         } catch (IOException ex) {
-            Logger.getLogger(Peer.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Problem connecting to server at: " 
+                    + otherPeerIp + ":" + port);
         }
     }
     
@@ -158,34 +127,41 @@ public class Peer {
     }
     
     public synchronized void playGesture(Gesture gesture) {
-        System.out.println("Entered playGesture method in Peer");
-        System.out.println("playerHandlers element 0: " + playerHandlers.get(0));
-        System.out.println("Gesture: "+gesture);
+        myCurrentGesture = gesture;
         for(PeerHandler peerHandler : playerHandlers) {
-            System.out.println("Inside loop for sending gesture");
             peerHandler.sendGesture(gesture);
         }
-        myCurrentGesture = gesture;
-        System.out.println("Played gesture from Peer... UI succesful");
+        updateGameState();
     }
-
-    public synchronized void updateGameState(PeerHandler peerHandler, Gesture gesture) {
+    
+    public synchronized void updateOpponentGesture(PeerHandler peerHandler, Gesture gesture) {
         int index = playerHandlers.indexOf(peerHandler);
         currentChoices.set(index, gesture);
+        updateGameState();
+    }
+
+    public synchronized void updateGameState() {
         //Calculate score if all results are in
-        if (!currentChoices.contains(null)) {
+        if ((!currentChoices.contains(Gesture.UNKNOWN)) 
+                && (myCurrentGesture != Gesture.UNKNOWN)) {
             calculateScore();
+            showGesturesInGui();
             //nullify gesture list when scores are calculated
-            for(Gesture g : currentChoices) {
-                g = null;
+            for(int i = 0; i < currentChoices.size(); i++) {
+                currentChoices.set(i, Gesture.UNKNOWN);
             }
             showScoresInGui();
-            showGesturesInGui();
+            gestureSendAllowedInGui();
+            System.out.println("My score: " + myScore);
+            for (int i = 0; i < scores.size(); i++) {
+                System.out.println("Score for player " + i
+                    + ": " + scores.get(i));
+            }
         }
     }
     
     public synchronized void calculateScore() {
-        int nrOfPlayers = currentChoices.size();
+        int nrOfPlayers = currentChoices.size() + 1;
         int papers = 0;
         int rocks = 0;
         int scissors = 0;
@@ -211,6 +187,17 @@ public class Peer {
             }            
         }
         
+        //Also check for my own score
+        if (myCurrentGesture == Gesture.PAPER) {
+            papers++;
+        }
+        else if (myCurrentGesture == Gesture.ROCK) {
+            rocks++;
+        }
+        else if (myCurrentGesture == Gesture.SCISSOR) {
+            scissors++;
+        }
+        
         int score;
         if (papers > 0 && rocks > 0 && scissors > 0) {
             //each of the gestures are chosen, no winners
@@ -221,12 +208,18 @@ public class Peer {
             for (int i : rock) {
                 scores.set(i, scores.get(i)+score);
             }
+            if (myCurrentGesture == Gesture.ROCK) {
+                myScore += score;
+            }
         }
         else if (rocks == 0 && scissors < nrOfPlayers) {
             //no rocks, scissors win over paper
             score = papers;
             for (int i : scissor) {
                 scores.set(i, scores.get(i)+score);
+            }
+            if (myCurrentGesture == Gesture.SCISSOR) {
+                myScore += score;
             }
         }
         else if (scissors == 0 && papers < nrOfPlayers) {
@@ -235,9 +228,26 @@ public class Peer {
             for (int i : paper) {
                 scores.set(i, scores.get(i)+score);
             }
+            if (myCurrentGesture == Gesture.PAPER) {
+                myScore += score;
+            }            
         }        
     }
-    
+        
+    public synchronized void testMessage(String msg) {
+        for (PeerHandler peer : playerHandlers) {
+            peer.sendTextMessage(msg);
+        }
+    }
+
+    void handleTextMessage(String textMessage) {
+        System.out.println("Text message received: \"" + textMessage + "\"");
+    }
+
+    private void gestureSendAllowedInGui() {
+        mainWindow.allowGestureSend();
+    }
+        
     public void showGesturesInGui() {
         List<Gesture> allGestures = new ArrayList(currentChoices);
         allGestures.add(0,myCurrentGesture);
@@ -260,15 +270,5 @@ public class Peer {
         showGesturesInGui();
         showScoresInGui();
         showPlayerServersInGui();
-    }
-    
-    public synchronized void testMessage(String msg) {
-        for (PeerHandler peer : playerHandlers) {
-            peer.sendTextMessage(msg);
-        }
-    }
-
-    void handleTextMessage(String textMessage) {
-        System.out.println("Text message received: \"" + textMessage + "\"");
-    }
+    }        
 }
