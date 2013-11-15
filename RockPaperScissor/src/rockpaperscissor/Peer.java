@@ -147,7 +147,11 @@ public class Peer {
     }
     
     public synchronized void playGesture(Gesture gesture) {
+        System.out.println("Entered playGesture method in Peer");
+        System.out.println("playerHandlers element 0: " + playerHandlers.get(0));
+        System.out.println("Gesture: "+gesture);
         for(PeerHandler peerHandler : playerHandlers) {
+            System.out.println("Inside loop for sending gesture");
             peerHandler.sendGesture(gesture);
         }
         myCurrentGesture = gesture;

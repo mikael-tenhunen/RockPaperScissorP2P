@@ -107,7 +107,7 @@ class PeerHandler implements Runnable {
     
     //Sends game gesture
     public synchronized void sendGesture(Gesture gesture) {
-        System.out.println("Gesture sent from PeerHandler");
+        System.out.println("Gesture about to be sent from PeerHandler");
         try {
             Message msg = new Message("Gesture",gesture);
             out.writeObject(msg);

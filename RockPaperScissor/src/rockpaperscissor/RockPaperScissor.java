@@ -30,7 +30,12 @@ public class RockPaperScissor {
 //            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        ConnectWindow cw = new ConnectWindow();
-          ConnectWindow.startConnectWindow();
+        Thread t = new Thread() {
+            public void run() {
+                ConnectWindow.startConnectWindow();
+            }
+        };
+        t.start();
     }
     
     public static Peer startServer(int port) throws IOException {

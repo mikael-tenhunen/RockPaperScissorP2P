@@ -103,7 +103,18 @@ public class MainWindow extends javax.swing.JFrame {
                 {
                     if(rockRadio.isSelected())
                     {
-                        MainWindow.this.peer.playGesture(Gesture.ROCK);
+                        System.out.println("yes, rock was selected");
+                        Thread t = new Thread() {
+                            public void run() {
+                                System.out.println("Inside run method of rock selected");
+                                System.out.println("Peer object: " + peer);
+                                MainWindow.this.peer.testMessage("HELLO!!");
+                                MainWindow.this.peer.playGesture(Gesture.ROCK);
+
+                            }
+                        };
+                        t.start();
+                        //                    MainWindow.this.peer.playGesture(Gesture.ROCK);
                     }
                     else if(paperRadio.isSelected())
                     {
@@ -117,6 +128,7 @@ public class MainWindow extends javax.swing.JFrame {
                     {
                         JOptionPane.showMessageDialog(null, "You need to pick your gesture");
                     }
+
                 }
             }    );
 
@@ -156,16 +168,15 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(22, 22, 22))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
                                 .addComponent(jLabel3)
                                 .addGap(97, 97, 97)
                                 .addComponent(jLabel1)
                                 .addGap(50, 50, 50)
                                 .addComponent(jLabel2))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(46, 46, 46)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -192,11 +203,10 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(disconnectButton)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(sendButton)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(paperRadio)
-                                    .addComponent(scissorRadio)
-                                    .addComponent(rockRadio))))
+                                .addComponent(paperRadio)
+                                .addComponent(scissorRadio)
+                                .addComponent(rockRadio))
+                            .addComponent(sendButton))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 );
 
