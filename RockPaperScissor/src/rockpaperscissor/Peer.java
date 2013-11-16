@@ -56,6 +56,10 @@ public class Peer {
         return playerServers;
     }
     
+    public synchronized int getScore() {
+        return myScore;
+    }
+    
     //addPlayer is called when the serversocket accepts new player connection
     public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
@@ -82,6 +86,26 @@ public class Peer {
             }
         }
         System.out.println("Now my playerServers contains " + playerServers);
+        requestOthersScores();
+    }
+    
+    //This is called when connected to a new swarm, so that the scores of the
+    //other peers in the swarm are known by this peer
+    public synchronized void requestOthersScores() {
+        PeerHandler peerHandler;
+        for (int i = 0; i < playerHandlers.size(); i++) {
+            peerHandler = playerHandlers.get(i);
+            System.out.println("Requesting score from " + playerServers.get(i));
+            peerHandler.requestScore();
+        }
+    }
+    
+    public void handleScoreFromPeer(PeerHandler peerHandler, int score) {
+        int index = playerHandlers.indexOf(peerHandler);
+        System.out.println("Received score from peer " + playerServers.get(index));
+        System.out.println("The score is: " + score);
+        scores.set(index, score);
+        showScoresInGui();
     }
     
     //sendMePeerList is a flag that shows if we are interested in getting the peerlist from 
@@ -98,7 +122,7 @@ public class Peer {
             PeerHandler peerHandler = new PeerHandler(out,in,this,sendMePeerList);
             serverRole.getExecutor().execute(peerHandler);           
         } catch (IOException ex) {
-            System.out.println("Problem connecting to server at: " 
+            System.out.println("Problem connecting to peer at: " 
                     + otherPeerIp + ":" + port);
         }
     }
@@ -122,8 +146,8 @@ public class Peer {
         currentChoices.remove(index);
         scores.remove(index);
         System.out.println("Removed peer: " + disconnectingPeerAddress);
+        updateGameState();
         showPlayerServersInGui();
-        showScoresInGui();
     }
     
     public synchronized void playGesture(Gesture gesture) {

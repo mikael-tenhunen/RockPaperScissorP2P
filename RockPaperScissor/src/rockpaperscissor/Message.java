@@ -9,6 +9,8 @@ import java.io.Serializable;
 * -ServerSocketAddressToListenerNoList
 * -ServerSocketAddressToConnecter
 * -PeerServerList
+* -ScoreRequest
+* -Score
 * -Gesture
 * -DisconnectNotification
 * -TextMessage

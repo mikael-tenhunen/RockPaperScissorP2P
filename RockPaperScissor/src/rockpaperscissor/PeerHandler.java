@@ -8,8 +8,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * PeerHandler listens for incoming gestures.
@@ -61,6 +59,8 @@ class PeerHandler implements Runnable {
             out.flush();
         }
         catch (IOException iOException) {
+            System.out.println("Problem requesting server socket"
+                    + " address from other peer");
         }
     }
     
@@ -90,6 +90,7 @@ class PeerHandler implements Runnable {
             out.flush();
         }
         catch (IOException iOException) {
+            System.out.println("Problem sending server socket address");
         }
     }
 
@@ -104,8 +105,31 @@ class PeerHandler implements Runnable {
             System.out.println("Sent peerServerList");
         }
         catch (IOException iOException) {
+            System.out.println("Problem sending peer server list");
         }
     }
+    
+    void requestScore() {
+        try {
+            Message msg = new Message("ScoreRequest",null);
+            out.writeObject(msg);
+            out.flush();
+        }
+        catch (IOException iOException) {
+            System.out.println("Problem sending score request");
+        }
+    }
+    
+    void sendScore() {
+        try {
+            Message msg = new Message("Score", me.getScore());
+            out.writeObject(msg);
+            out.flush();
+        }
+        catch (IOException iOException) {
+            System.out.println("Problem sending score");
+        }
+    }    
     
     //Sends game gesture
     public void sendGesture(Gesture gesture) {
@@ -116,6 +140,7 @@ class PeerHandler implements Runnable {
             out.flush();
         }
         catch (IOException IOException) {
+            System.out.println("Problem sending gesture");
         }
         System.out.println("Gesture sent.");
     }
@@ -129,6 +154,7 @@ class PeerHandler implements Runnable {
             out.flush();
         }
         catch (IOException iOException) {
+            System.out.println("Problem sending text message");
         }        
     }
     
@@ -139,6 +165,7 @@ class PeerHandler implements Runnable {
             out.flush();
         }
         catch (IOException IOException) {
+            System.out.println("Problem sending disconnect notification");
         }
     }
     
@@ -156,21 +183,8 @@ class PeerHandler implements Runnable {
                     InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
                     serverSocketAddress = serverConnecter;
 //                    System.out.println("serverSocketAddress received!");
-                    //trying sendPeerServerList
                     sendPeerServerList();
                     me.addPlayer(this);
-//                    //connect to the other peer so it creates a 
-//                    //PeerHandler for this peer
-//                    String serverIp = serverToConnectTo.getHostString();
-//                    int serverPort = serverToConnectTo.getPort();
-//                    //Socket socket = new Socket (serverIp, serverPort);
-//                    peerSocket = new Socket (serverIp, serverPort);
-//                    System.out.println("Trying to initialize input- output streams in receiveMessage in PeerHandler");
-//                    out = new ObjectOutputStream(peerSocket.getOutputStream());
-//                    in = new ObjectInputStream(peerSocket.getInputStream());
-//                    System.out.println("receiveMessage input- output streams initialized!");
-//                    System.out.println("peerhandler's local socket at port: " + peerSocket.getLocalSocketAddress());
-//                    System.out.println("peerhandler's remote socket at port: " + peerSocket.getRemoteSocketAddress());
                     break;
 //                case "ServerSocketAddressToListenerNoList":
 //                    InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
@@ -193,6 +207,12 @@ class PeerHandler implements Runnable {
                     List<InetSocketAddress> serverSocketAddressList = (List<InetSocketAddress>) msg.getMsgObj();
                     me.handlePeerServerList(serverSocketAddressList);
                     break;
+                case "ScoreRequest":
+                    sendScore();
+                    break;
+                case "Score":
+                    int score = (Integer) msg.getMsgObj();
+                    me.handleScoreFromPeer(this, score);
                 case "Gesture":
                     Gesture gesture = (Gesture) msg.getMsgObj();
                     System.out.println("Gesture received...");
@@ -220,6 +240,7 @@ class PeerHandler implements Runnable {
             }
         }
         catch (Exception e) {
+//            System.out.println("Problem encountered while receiving message");
         }  
     }
     
@@ -241,6 +262,8 @@ class PeerHandler implements Runnable {
             out.close();
             in.close();
         } catch (IOException iOException) {
+            System.out.println("Problem closing input- and output streams for"
+                    + "peer handler socket");
         }
     }
 }
