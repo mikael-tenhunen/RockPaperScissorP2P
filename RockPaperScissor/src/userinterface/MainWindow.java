@@ -307,6 +307,11 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     public void allowGestureSend() {
-        sendButton.setEnabled(true);
+//        sendButton.setEnabled(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                sendButton.setEnabled(true);
+            }
+        });
     }
 }

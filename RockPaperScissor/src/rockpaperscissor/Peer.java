@@ -15,11 +15,11 @@ import userinterface.MainWindow;
  * @author miikka
  */
 public class Peer {
-    private List<InetSocketAddress> playerServers;
-    private List<PeerHandler> playerHandlers;
-    private List<Gesture> currentChoices;
-    private List<Integer> scores;
-    private ServerSocket serverSocket;
+    private final List<InetSocketAddress> playerServers;
+    private final List<PeerHandler> playerHandlers;
+    private final List<Gesture> currentChoices;
+    private final List<Integer> scores;
+    private final ServerSocket serverSocket;
     private Gesture myCurrentGesture;
     private ServerRole serverRole;
     private int myScore;
@@ -140,7 +140,7 @@ public class Peer {
         updateGameState();
     }
 
-    public synchronized void updateGameState() {
+    public void updateGameState() {
         //Calculate score if all results are in
         if ((!currentChoices.contains(Gesture.UNKNOWN)) 
                 && (myCurrentGesture != Gesture.UNKNOWN)) {
@@ -150,13 +150,14 @@ public class Peer {
             for(int i = 0; i < currentChoices.size(); i++) {
                 currentChoices.set(i, Gesture.UNKNOWN);
             }
+            myCurrentGesture = Gesture.UNKNOWN;
             showScoresInGui();
             gestureSendAllowedInGui();
-            System.out.println("My score: " + myScore);
-            for (int i = 0; i < scores.size(); i++) {
-                System.out.println("Score for player " + i
-                    + ": " + scores.get(i));
-            }
+//            System.out.println("My score: " + myScore);
+//            for (int i = 0; i < scores.size(); i++) {
+//                System.out.println("Score for player " + i
+//                    + ": " + scores.get(i));
+//            }
         }
     }
     

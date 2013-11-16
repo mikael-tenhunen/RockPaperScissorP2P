@@ -109,7 +109,7 @@ class PeerHandler implements Runnable {
     
     //Sends game gesture
     public void sendGesture(Gesture gesture) {
-        System.out.println("Gesture about to be sent from PeerHandler");
+//        System.out.println("Gesture about to be sent from PeerHandler...");
         try {
             Message msg = new Message("Gesture",gesture);
             out.writeObject(msg);
@@ -117,6 +117,7 @@ class PeerHandler implements Runnable {
         }
         catch (IOException IOException) {
         }
+        System.out.println("Gesture sent.");
     }
     
     public void sendTextMessage(String textMessage) {
