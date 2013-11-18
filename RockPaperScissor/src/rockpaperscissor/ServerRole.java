@@ -23,6 +23,10 @@ public class ServerRole implements Runnable {
     private Executor e;
 
 
+    /**
+     *
+     * @param me
+     */
     public ServerRole(Peer me) {
         this.me = me;
         serverSocket = me.getServerSocket();
@@ -53,6 +57,10 @@ public class ServerRole implements Runnable {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public Executor getExecutor() {
         return e;
     }

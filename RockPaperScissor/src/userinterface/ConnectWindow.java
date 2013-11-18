@@ -216,6 +216,9 @@ public class ConnectWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_remoteIpFieldActionPerformed
 
+    /**
+     *
+     */
     public static void startConnectWindow() {
          /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
