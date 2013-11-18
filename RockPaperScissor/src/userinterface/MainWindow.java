@@ -312,8 +312,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     /**
-     *
-     * @param allPlayerServers
+     * This method updates player herpderop
+     * @param allPlayerServers thehsdh
      */
     public void updatePlayers(List<InetSocketAddress> allPlayerServers) {
         DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
