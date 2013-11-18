@@ -11,7 +11,7 @@ import userinterface.ConnectWindow;
 public class RockPaperScissor {
 
     /**
-     *
+     * Main method creates a new thread and starts a connect window
      * @param args
      */
     public static void main(String[] args) {
@@ -26,7 +26,8 @@ public class RockPaperScissor {
     }
     
     /**
-     *
+     * startServer creates a new peer and starts a serverrole for the specific peer
+     * and then returns the said peer.
      * @param port
      * @return
      * @throws IOException
@@ -41,7 +42,7 @@ public class RockPaperScissor {
     }
     
     /**
-     *
+     * NOT USED
      * @param peer
      */
     public static void sendTestMessage(Peer peer) {
@@ -52,7 +53,7 @@ public class RockPaperScissor {
     }
     
     /**
-     *
+     * NOT USED
      * @param peer
      */
     public static void testConnect(Peer peer) {

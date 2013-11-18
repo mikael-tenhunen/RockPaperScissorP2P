@@ -27,7 +27,8 @@ public class Peer {
     
     
     /**
-     *
+     * Creates a Peer Onject with its own variables that can be changed and used
+     * as parameters in other methods
      * @param socket
      */
     public Peer(ServerSocket socket) {
@@ -50,7 +51,7 @@ public class Peer {
     }
     
     /**
-     *
+     * The method startServerRole starts a new server thread.
      */
     public void startServerRole() {
         //start listening server
@@ -60,7 +61,7 @@ public class Peer {
     }
 
     /**
-     *
+     * This method just returns the serversocket of a peer
      * @return
      */
     public ServerSocket getServerSocket() {
@@ -68,7 +69,7 @@ public class Peer {
     }
     
     /**
-     *
+     * This method returns the list containing all the active palyers
      * @return
      */
     public synchronized List getPlayerServers() {
@@ -76,7 +77,7 @@ public class Peer {
     }
     
     /**
-     *
+     * Returns a peers own score
      * @return
      */
     public synchronized int getScore() {
@@ -85,7 +86,7 @@ public class Peer {
     
     //addPlayer is called when the serversocket accepts new player connection
     /**
-     *
+     * This method adds a newly connected player to the current list of players
      * @param peerHandler
      */
     public synchronized void addPlayer(PeerHandler peerHandler) {
@@ -100,7 +101,9 @@ public class Peer {
     }
     
     /**
-     *
+     * This method is called when you want to connect yourself to all the other peers
+     * that exist in a list of all the current players. it connects you to everyone that
+     * are not currently in your list
      * @param serverSocketAddresses
      */
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
@@ -123,7 +126,8 @@ public class Peer {
     //This is called when connected to a new swarm, so that the scores of the
     //other peers in the swarm are known by this peer
     /**
-     *
+     * This methods sends a request to the other peers and asks them for their current
+     * scores.
      */
     public synchronized void requestOthersScores() {
         PeerHandler peerHandler;
