@@ -27,7 +27,7 @@ public class Message implements Serializable {
     }
     
      /**
-     * @return the type
+     * @return the type of message
      */
     public String getType() {
         return type;

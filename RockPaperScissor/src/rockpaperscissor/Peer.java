@@ -30,6 +30,11 @@ public class Peer {
     private MainWindow mainWindow;
     
     
+    /**
+     * Creates a Peer Onject with its own variables that can be changed and used
+     * as parameters in other methods
+     * @param socket
+     */
     public Peer(ServerSocket socket) {
         serverSocket = socket;
         playerServers = new ArrayList();
@@ -40,11 +45,18 @@ public class Peer {
         myCurrentGesture = Gesture.UNKNOWN;
     }
     
+    /**
+     *
+     * @param mainWindow
+     */
     public void setMainWindow(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         showListsInGui();
     }
     
+    /**
+     * The method startServerRole starts a new server thread.
+     */
     public void startServerRole() {
         //start listening server
         serverRole = new ServerRole(this);
@@ -52,14 +64,26 @@ public class Peer {
         serverThread.start();
     }
 
+    /**
+     * This method just returns the serversocket of a peer
+     * @return
+     */
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
     
+    /**
+     * This method returns the list containing all the active palyers
+     * @return
+     */
     public synchronized List getPlayerServers() {
         return playerServers;
     }
     
+    /**
+     * Returns a peers own score
+     * @return
+     */
     public synchronized int getScore() {
         return myScore;
     }
@@ -69,6 +93,10 @@ public class Peer {
     }
     
     //addPlayer is called when the serversocket accepts new player connection
+    /**
+     * This method adds a newly connected player to the current list of players
+     * @param peerHandler
+     */
     public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
         currentChoices.add(Gesture.UNKNOWN);
@@ -83,6 +111,12 @@ public class Peer {
 //        showScoresInGui();
     }
     
+    /**
+     * This method is called when you want to connect yourself to all the other peers
+     * that exist in a list of all the current players. it connects you to everyone that
+     * are not currently in your list
+     * @param serverSocketAddresses
+     */
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
         String otherPeerIp;
         int port;
@@ -102,6 +136,10 @@ public class Peer {
     
     //This is called when connected to a new swarm, so that the scores of the
     //other peers in the swarm are known by this peer
+    /**
+     * This methods sends a request to the other peers and asks them for their current
+     * scores.
+     */
     public synchronized void requestOthersScores() {
         PeerHandler peerHandler;
         for (int i = 0; i < playerHandlers.size(); i++) {
@@ -111,7 +149,12 @@ public class Peer {
         }
     }
     
-    public synchronized void handleScoreFromPeer(PeerHandler peerHandler, int score) {
+    /**
+     *
+     * @param peerHandler
+     * @param score
+     */
+    public void handleScoreFromPeer(PeerHandler peerHandler, int score) {
         int index = playerHandlers.indexOf(peerHandler);
         System.out.println("Received score from peer " + playerServers.get(index));
         System.out.println("The score is: " + score);
@@ -122,6 +165,12 @@ public class Peer {
     //sendMePeerList is a flag that shows if we are interested in getting the peerlist from 
     //the remote peer or not. If we are connecting to all peers in an already received
     //peerServerList, we are not interested in getting new lists.
+    /**
+     *
+     * @param otherPeerIp
+     * @param port
+     * @param sendMePeerList
+     */
     public synchronized void connectToPeer(String otherPeerIp, int port, boolean sendMePeerList) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
@@ -142,6 +191,9 @@ public class Peer {
         }
     }
     
+    /**
+     *
+     */
     public synchronized void disconnectMe() {
         for (PeerHandler ph : playerHandlers) {
             ph.sendDisconnectNotification((InetSocketAddress)serverSocket.getLocalSocketAddress());
@@ -154,6 +206,10 @@ public class Peer {
         }
     }
     
+    /**
+     *
+     * @param disconnectingPeerAddress
+     */
     public synchronized void disconnectOtherPeer(InetSocketAddress disconnectingPeerAddress) {
         int index = playerServers.indexOf(disconnectingPeerAddress);
         playerServers.remove(index);
@@ -166,6 +222,10 @@ public class Peer {
         showScoresInGui();
     }
     
+    /**
+     *
+     * @param gesture
+     */
     public synchronized void playGesture(Gesture gesture) {
         myCurrentGesture = gesture;
         for(PeerHandler peerHandler : playerHandlers) {
@@ -174,13 +234,21 @@ public class Peer {
         updateGameState();
     }
     
+    /**
+     *
+     * @param peerHandler
+     * @param gesture
+     */
     public synchronized void updateOpponentGesture(PeerHandler peerHandler, Gesture gesture) {
         int index = playerHandlers.indexOf(peerHandler);
         currentChoices.set(index, gesture);
         updateGameState();
     }
 
-    public synchronized void updateGameState() {
+    /**
+     *
+     */
+    public void updateGameState() {
         //Calculate score if all results are in
         if ((!currentChoices.contains(Gesture.UNKNOWN)) 
                 && (myCurrentGesture != Gesture.UNKNOWN)) {
@@ -201,6 +269,9 @@ public class Peer {
         }
     }
     
+    /**
+     *
+     */
     public synchronized void calculateScore() {
         int nrOfPlayers = currentChoices.size() + 1;
         int papers = 0;
@@ -275,6 +346,10 @@ public class Peer {
         }        
     }
         
+    /**
+     *
+     * @param msg
+     */
     public synchronized void testMessage(String msg) {
         for (PeerHandler peer : playerHandlers) {
             peer.sendTextMessage(msg);
@@ -289,24 +364,36 @@ public class Peer {
         mainWindow.allowGestureSend();
     }
         
+    /**
+     *
+     */
     public void showGesturesInGui() {
         List<Gesture> allGestures = new ArrayList(currentChoices);
         allGestures.add(0,myCurrentGesture);
         mainWindow.updateGestures(allGestures);
     }
 
+    /**
+     *
+     */
     public void showScoresInGui() {
         List<Integer> allScores = new ArrayList(scores);
         allScores.add(0,myScore);
         mainWindow.updateScores(allScores);
     }
     
+    /**
+     *
+     */
     public void showPlayerServersInGui() {
         List<InetSocketAddress> allPlayerServers = new ArrayList(playerServers);
         allPlayerServers.add(0,(InetSocketAddress)serverSocket.getLocalSocketAddress());
         mainWindow.updatePlayers(allPlayerServers);
     }    
     
+    /**
+     *
+     */
     public void showListsInGui() {    
         showGesturesInGui();
         showScoresInGui();

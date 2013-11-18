@@ -10,24 +10,13 @@ import userinterface.ConnectWindow;
  */
 public class RockPaperScissor {
 
+    /**
+     * Main method creates a new thread and starts a connect window
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-//        System.out.print("Choose Port to listen to new connections: ");
-//        int port = in.nextInt();
-//        try {
-//            Peer peer = startServer(port);
-//        
-//        //TEST    
-//        testConnect(peer);    
-//        //TEST
-//            
-//        //TEST
-//        sendTestMessage(peer);
-//        //TEST
-//        } catch (IOException ex) {
-//            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        ConnectWindow cw = new ConnectWindow();
+
         Thread t = new Thread() {
             public void run() {
                 ConnectWindow.startConnectWindow();
@@ -36,21 +25,26 @@ public class RockPaperScissor {
         t.start();
     }
     
+    /**
+     * startServer creates a new peer and starts a serverrole for the specific peer
+     * and then returns the said peer.
+     * @param port
+     * @return
+     * @throws IOException
+     */
     public static Peer startServer(int port) throws IOException {
         ServerSocket servsocket = new ServerSocket(port);
         Peer peer = new Peer (servsocket);   
         //ServerRole of peer is initialized in startServerRole method of Peer
         peer.startServerRole();
-        
-//        //TEST KOD
-//        if (port == 8666) {
-//            System.out.println("Trying to connect to other peer at port 8180");
-//            peer.connectToPeer("localhost",8180);
-//        }   
-//        //TEST KOD
+
         return peer;
     }
     
+    /**
+     * NOT USED
+     * @param peer
+     */
     public static void sendTestMessage(Peer peer) {
         Scanner in = new Scanner(System.in);
         System.out.print("Write a message: ");
@@ -58,6 +52,10 @@ public class RockPaperScissor {
         peer.testMessage(message);
     }
     
+    /**
+     * NOT USED
+     * @param peer
+     */
     public static void testConnect(Peer peer) {
         Scanner in = new Scanner(System.in);
         System.out.print("If you want to connect to another peer's port, enter"

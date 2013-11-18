@@ -23,6 +23,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     /**
      * Creates new form MainWindow
+     * @param peer 
      */
 //    public MainWindow() {
 //        initComponents();
@@ -212,6 +213,10 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_paperRadioActionPerformed
 
+    /**
+     *
+     * @param peer
+     */
     public static void startMainWindow(final Peer peer){
            /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -282,6 +287,10 @@ public class MainWindow extends javax.swing.JFrame {
 //        playerList.setModel(playerServerListModel);
 //    }
     
+    /**
+     *
+     * @param allGestures
+     */
     public void updateGestures(List<Gesture> allGestures) {
         DefaultListModel<Gesture> gestureListModel = new DefaultListModel();
         for (Gesture score : allGestures) {
@@ -290,6 +299,10 @@ public class MainWindow extends javax.swing.JFrame {
         choicesList.setModel(gestureListModel);   
     }
     
+    /**
+     *
+     * @param allScores
+     */
     public void updateScores(List<Integer> allScores) {
          DefaultListModel<Integer> scoreListModel = new DefaultListModel();
         for (Integer score : allScores) {
@@ -298,6 +311,10 @@ public class MainWindow extends javax.swing.JFrame {
         scoreList.setModel(scoreListModel);       
     }
     
+    /**
+     * This method updates player herpderop
+     * @param allPlayerServers thehsdh
+     */
     public void updatePlayers(List<InetSocketAddress> allPlayerServers) {
         DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
         for (InetSocketAddress address : allPlayerServers) {
@@ -306,6 +323,9 @@ public class MainWindow extends javax.swing.JFrame {
         playerList.setModel(playerServerListModel);        
     }
 
+    /**
+     *
+     */
     public void allowGestureSend() {
 //        sendButton.setEnabled(true);
         java.awt.EventQueue.invokeLater(new Runnable() {
