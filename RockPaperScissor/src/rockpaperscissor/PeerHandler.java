@@ -1,9 +1,13 @@
 
 package rockpaperscissor;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -28,9 +32,14 @@ class PeerHandler implements Runnable {
         this.me = me;
         sendMePeerList = true;
         try {
-            System.out.println("Trying to initialize input- output streams in PeerHandler");
-            out = new ObjectOutputStream(peerSocket.getOutputStream());
-            in = new ObjectInputStream(peerSocket.getInputStream());
+            System.out.println("Trying to initialize input- output streams in PeerHandler");          
+//            out = new ObjectOutputStream(new BufferedOutputStream(peerSocket.getOutputStream()));
+//            in = new ObjectInputStream(new BufferedInputStream(peerSocket.getInputStream()));     
+            OutputStream outStream = peerSocket.getOutputStream();
+            out = new ObjectOutputStream(new BufferedOutputStream(outStream));
+            out.flush();
+            InputStream inStream = peerSocket.getInputStream();            
+            in = new ObjectInputStream(new BufferedInputStream(inStream));
 //            System.out.println("PeerHandler got input- and output streams.");
             sendServerSocketAddressRequest("ServerSocketAddressRequestFromListener");
         } catch (IOException iOException) {
@@ -41,8 +50,14 @@ class PeerHandler implements Runnable {
     //Constructor to be called when this peer has called someone else's server-
     //role. It also sends a serverSocketAddressRequest
     PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me, boolean sendMePeerList) {
-        this.in = in;
         this.out = out;
+        try {
+            out.flush();
+        } catch (IOException ex) {
+            System.out.println("problem creating output stream in "
+                    + "connecter-constructor of PeerHandler");
+        }
+        this.in = in;
         peerSocket = null;
         this.me = me;
         this.sendMePeerList = sendMePeerList;
@@ -169,7 +184,7 @@ class PeerHandler implements Runnable {
         }
     }
     
-    public void receiveMessage() {
+    public synchronized void receiveMessage() {
         Object returnMessage = null;
         try {
             while (returnMessage == null) {
@@ -213,6 +228,7 @@ class PeerHandler implements Runnable {
                 case "Score":
                     int score = (Integer) msg.getMsgObj();
                     me.handleScoreFromPeer(this, score);
+                    break;
                 case "Gesture":
                     Gesture gesture = (Gesture) msg.getMsgObj();
                     System.out.println("Gesture received...");
@@ -235,12 +251,13 @@ class PeerHandler implements Runnable {
                     System.out.println("DisconnectNotification received.");
                     InetSocketAddress disconnectingPeerAddress = (InetSocketAddress) msg.getMsgObj();
                     me.disconnectOtherPeer(disconnectingPeerAddress);
-                    break;
-                    
+                    break;     
             }
         }
         catch (Exception e) {
 //            System.out.println("Problem encountered while receiving message");
+            System.out.print(e);
+//            e.printStackTrace();
         }  
     }
     
@@ -259,8 +276,8 @@ class PeerHandler implements Runnable {
 
     void closeAll() {
         try {
-            out.close();
             in.close();
+            out.close();
         } catch (IOException iOException) {
             System.out.println("Problem closing input- and output streams for"
                     + "peer handler socket");

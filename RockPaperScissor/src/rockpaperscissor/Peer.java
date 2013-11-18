@@ -1,8 +1,12 @@
 package rockpaperscissor;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -66,10 +70,12 @@ public class Peer {
         currentChoices.add(Gesture.UNKNOWN);
         scores.add(0);
         playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
+        //Now request the score of this player
+        peerHandler.requestScore();
         System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
         System.out.println("Now my playerServers contains " + playerServers);
         showPlayerServersInGui();
-        showScoresInGui();
+//        showScoresInGui();
     }
     
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
@@ -86,7 +92,7 @@ public class Peer {
             }
         }
         System.out.println("Now my playerServers contains " + playerServers);
-        requestOthersScores();
+//        requestOthersScores();
     }
     
     //This is called when connected to a new swarm, so that the scores of the
@@ -100,7 +106,7 @@ public class Peer {
         }
     }
     
-    public void handleScoreFromPeer(PeerHandler peerHandler, int score) {
+    public synchronized void handleScoreFromPeer(PeerHandler peerHandler, int score) {
         int index = playerHandlers.indexOf(peerHandler);
         System.out.println("Received score from peer " + playerServers.get(index));
         System.out.println("The score is: " + score);
@@ -115,9 +121,13 @@ public class Peer {
         try {
             Socket socket = new Socket (otherPeerIp, port);
 //            addPlayer(peerHandler);
-            //LIGG OCH LYSSNA ConnectBackRequest
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());            
+            OutputStream outStream = socket.getOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(outStream));
+            out.flush();
+            InputStream inStream = socket.getInputStream();
+            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inStream)); 
+//            ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));            
+//            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));    
             //Create peerhandler with streams, and start its thread
             PeerHandler peerHandler = new PeerHandler(out,in,this,sendMePeerList);
             serverRole.getExecutor().execute(peerHandler);           
@@ -164,7 +174,7 @@ public class Peer {
         updateGameState();
     }
 
-    public void updateGameState() {
+    public synchronized void updateGameState() {
         //Calculate score if all results are in
         if ((!currentChoices.contains(Gesture.UNKNOWN)) 
                 && (myCurrentGesture != Gesture.UNKNOWN)) {
