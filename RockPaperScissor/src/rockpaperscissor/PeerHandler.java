@@ -50,6 +50,8 @@ class PeerHandler implements Runnable {
     //Constructor to be called when this peer has called someone else's server-
     //role. It also sends a serverSocketAddressRequest
     PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me, boolean sendMePeerList) {
+        this.me = me;
+        this.sendMePeerList = sendMePeerList;
         this.out = out;
         try {
             out.flush();
@@ -59,8 +61,6 @@ class PeerHandler implements Runnable {
         }
         this.in = in;
         peerSocket = null;
-        this.me = me;
-        this.sendMePeerList = sendMePeerList;
         sendServerSocketAddressRequest("ServerSocketAddressRequestFromConnecter");
     }
     
@@ -146,6 +146,20 @@ class PeerHandler implements Runnable {
         }
     }    
     
+    //This is needed for a new peer in the swarm to request the current choices
+    //of already existing peers in the swarm (they might have made a choice 
+    //this round when this peer connects)
+    public void requestGesture() {
+        try {
+            Message msg = new Message("GestureRequest",null);
+            out.writeObject(msg);
+            out.flush();
+        }
+        catch (IOException iOException) {
+            System.out.println("Problem sending gesture request");
+        }        
+    }
+    
     //Sends game gesture
     public void sendGesture(Gesture gesture) {
 //        System.out.println("Gesture about to be sent from PeerHandler...");
@@ -229,6 +243,9 @@ class PeerHandler implements Runnable {
                     int score = (Integer) msg.getMsgObj();
                     me.handleScoreFromPeer(this, score);
                     break;
+                case "GestureRequest":
+                    sendGesture(me.getGesture());
+                    break;
                 case "Gesture":
                     Gesture gesture = (Gesture) msg.getMsgObj();
                     System.out.println("Gesture received...");
@@ -238,14 +255,6 @@ class PeerHandler implements Runnable {
                     System.out.println("Received text message");
                     String textMessage = (String) msg.getMsgObj();
                     me.handleTextMessage(textMessage);
-                    //TEST1
-//                    Message returnmessage = new Message("TextMessage","GREETINGS FROM THE STARS");
-//                    out.writeObject(returnmessage);
-//                    out.flush();
-                    //TEST1
-                    //TEST2
-//                    sendTextMessage("WE COME IN PEACE");
-                    //TEST2
                     break;
                 case "DisconnectNotification":
                     System.out.println("DisconnectNotification received.");
@@ -257,7 +266,7 @@ class PeerHandler implements Runnable {
         catch (Exception e) {
 //            System.out.println("Problem encountered while receiving message");
             System.out.print(e);
-//            e.printStackTrace();
+            e.printStackTrace();
         }  
     }
     

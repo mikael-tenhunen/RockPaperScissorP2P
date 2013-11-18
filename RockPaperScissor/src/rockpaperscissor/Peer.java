@@ -64,14 +64,19 @@ public class Peer {
         return myScore;
     }
     
+    public synchronized Gesture getGesture() {
+        return myCurrentGesture;
+    }
+    
     //addPlayer is called when the serversocket accepts new player connection
     public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
         currentChoices.add(Gesture.UNKNOWN);
         scores.add(0);
         playerServers.add((InetSocketAddress) peerHandler.getServerSocketAddress());
-        //Now request the score of this player
+        //Now request the score and current gesture of this player
         peerHandler.requestScore();
+        peerHandler.requestGesture();
         System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
         System.out.println("Now my playerServers contains " + playerServers);
         showPlayerServersInGui();
@@ -158,6 +163,7 @@ public class Peer {
         System.out.println("Removed peer: " + disconnectingPeerAddress);
         updateGameState();
         showPlayerServersInGui();
+        showScoresInGui();
     }
     
     public synchronized void playGesture(Gesture gesture) {

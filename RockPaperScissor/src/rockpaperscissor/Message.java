@@ -11,6 +11,7 @@ import java.io.Serializable;
 * -PeerServerList
 * -ScoreRequest
 * -Score
+* -GestureRequest
 * -Gesture
 * -DisconnectNotification
 * -TextMessage
