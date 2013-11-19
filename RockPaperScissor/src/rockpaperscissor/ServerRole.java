@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package rockpaperscissor;
 
 import java.io.IOException;
@@ -14,18 +8,23 @@ import java.util.concurrent.Executors;
 
 /**
  * This is a thread to receive connections from other peers. 
- * It listens constantly for new connections.
+ * Its run method listens for new incoming connections from other peers. 
+ * A Runnable PeerHandler object is created for the connecting peer and is run
+ * with an Executor.
  */
 public class ServerRole implements Runnable {
-    private Peer me;
-    private ServerSocket serverSocket;
-    private int playerLimit = 10;
-    private Executor e;
+    private final Peer me;
+    private final ServerSocket serverSocket;
+    private final int playerLimit = 10;
+    private final Executor e;
 
 
     /**
+     * Constructs a ServerRole object with a thread pool for PeerHandlers with
+     * size playerLimit.
      *
-     * @param me
+     * @param me a Peer object representing the peer that this ServerRole belongs
+     * to
      */
     public ServerRole(Peer me) {
         this.me = me;
@@ -33,6 +32,10 @@ public class ServerRole implements Runnable {
         e = Executors.newFixedThreadPool(playerLimit);
     }
 
+    /**
+     * Listens for incoming connections, initiates a new PeerHandler object for
+     * every peer that wants to connect, and starts the PeerHandler thread.
+     */
     @Override
     public void run() {
         System.out.println ("Listening for incoming connections on port " + serverSocket.getLocalPort());
@@ -47,19 +50,21 @@ public class ServerRole implements Runnable {
                 System.out.println("created new PeerHandler");
             }
         } catch (IOException iOException) {
-            try {
-                    System.out.println ("Something went wrong");
-                    serverSocket.close ();
-            }
-            catch (IOException ioex) {
-                    System.out.println ("Problem closing serverSocket");
-            }
+//            try {
+//                    System.out.println ("Something went wrong, closing "
+//                            + "server socket");
+//                    serverSocket.close ();
+//                
+//            }
+//            catch (IOException ioex) {
+//                    System.out.println ("Problem closing serverSocket");
+//            }
+            System.out.println("Something went wrong with server socket...");
         }
     }
     
     /**
-     *
-     * @return
+     * @return Executor
      */
     public Executor getExecutor() {
         return e;

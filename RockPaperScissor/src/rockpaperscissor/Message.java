@@ -2,7 +2,11 @@ package rockpaperscissor;
 
 import java.io.Serializable;
 
-/* Message types are Strings:
+/** 
+* Message represents the messages passed by PeerHandler. The message consists of 
+* a header (the String-object type) and an Object.
+* 
+* Message types are Strings:
 * -ServerSocketAddressRequestFromListener
 * -ServerSocketAddressRequestFromConnecter
 * -ServerSocketAddressToListener
@@ -21,7 +25,13 @@ public class Message implements Serializable {
     private Object msgObj;
     
     //ConnectBackRequest/Ack
-    public Message(String type, Object o) {
+
+    /**
+     *
+     * @param type
+     * @param o
+     */
+        public Message(String type, Object o) {
         this.type = type;
         msgObj = o;
     }

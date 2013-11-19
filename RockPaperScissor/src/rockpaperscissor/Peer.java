@@ -15,8 +15,13 @@ import java.util.List;
 import userinterface.MainWindow;
 
 /**
- *
- * @author miikka
+ * This class represents a peer and is a kind of a controller for communication
+ * with interface to other peers (PeerHandler objects) and GUI.
+ * 
+ * Remote peers are identified by either the InetSocketAddress of their listening
+ * ServerSockets, or their PeerHandler. InetSocketAddresses, PeerHandlers, scores 
+ * and current choices of gestures are kept in lists with consistent index 
+ * numbers. This means that remote peers can also be identified by index numbers.
  */
 public class Peer {
     private final List<InetSocketAddress> playerServers;
@@ -31,9 +36,9 @@ public class Peer {
     
     
     /**
-     * Creates a Peer Onject with its own variables that can be changed and used
-     * as parameters in other methods
-     * @param socket
+     * Constructor for Peer.
+     * 
+     * @param socket the ServerSocket that is listening for incoming connections.
      */
     public Peer(ServerSocket socket) {
         serverSocket = socket;
@@ -46,8 +51,8 @@ public class Peer {
     }
     
     /**
-     *
-     * @param mainWindow
+     * @param mainWindow The main game GUI-component that Peer needs for 
+     * communicating with the GUI.
      */
     public void setMainWindow(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
@@ -55,7 +60,8 @@ public class Peer {
     }
     
     /**
-     * The method startServerRole starts a new server thread.
+     * The method startServerRole starts a new server thread (that listens to
+     * incoming connections).
      */
     public void startServerRole() {
         //start listening server
@@ -65,37 +71,42 @@ public class Peer {
     }
 
     /**
-     * This method just returns the serversocket of a peer
-     * @return
+     * This method just returns the ServerSocket of a peer.
+     * @return serverSocket the ServerSocket that listens for incoming connections.
      */
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
     
     /**
-     * This method returns the list containing all the active palyers
-     * @return
+     * @return the list containing all the players except this one
      */
     public synchronized List getPlayerServers() {
         return playerServers;
     }
     
     /**
-     * Returns a peers own score
-     * @return
+     * @return this peer's own score
      */
     public synchronized int getScore() {
         return myScore;
     }
     
+    /**
+     *
+     * @return this peer's current choice of gesture (is Gesture.UNKNOWN if no 
+     * choice has been made yet).
+     */
     public synchronized Gesture getGesture() {
         return myCurrentGesture;
     }
     
-    //addPlayer is called when the serversocket accepts new player connection
+    //
     /**
-     * This method adds a newly connected player to the current list of players
-     * @param peerHandler
+     * This method adds information representing a newly connected player to the 
+     * fields of this Peer object.
+     * @param peerHandler the PeerHandler object that represents the interface
+     * to the peer we are about to add as a new player.
      */
     public synchronized void addPlayer(PeerHandler peerHandler) {
         playerHandlers.add(peerHandler);
@@ -112,10 +123,12 @@ public class Peer {
     }
     
     /**
+     * handlePeerServerList gets a list of addresses to ServerSockets listening
+     * to incoming connections at other peers. Called by PeerHandler.
      * This method is called when you want to connect yourself to all the other peers
-     * that exist in a list of all the current players. it connects you to everyone that
-     * are not currently in your list
-     * @param serverSocketAddresses
+     * that exist in a list of all the current players. It connects you to everyone that
+     * is not currently in the list playerServers.
+     * @param serverSocketAddresses list of other players listening sockets.
      */
     public synchronized void handlePeerServerList(List<InetSocketAddress> serverSocketAddresses) {
         String otherPeerIp;
@@ -131,26 +144,17 @@ public class Peer {
             }
         }
         System.out.println("Now my playerServers contains " + playerServers);
-//        requestOthersScores();
     }
     
-    //This is called when connected to a new swarm, so that the scores of the
-    //other peers in the swarm are known by this peer
-    /**
-     * This methods sends a request to the other peers and asks them for their current
-     * scores.
-     */
-    public synchronized void requestOthersScores() {
-        PeerHandler peerHandler;
-        for (int i = 0; i < playerHandlers.size(); i++) {
-            peerHandler = playerHandlers.get(i);
-            System.out.println("Requesting score from " + playerServers.get(i));
-            peerHandler.requestScore();
-        }
-    }
     
     /**
-     *
+     * This method updates the score of another player.
+     * It is called by a PeerHandler when it receives the current score of
+     * another player. 
+     * 
+     * When a new swarm is joined, all the peers we connect to are sent a request
+     * for their current score.
+     * 
      * @param peerHandler
      * @param score
      */
@@ -161,27 +165,31 @@ public class Peer {
         scores.set(index, score);
         showScoresInGui();
     }
-    
-    //sendMePeerList is a flag that shows if we are interested in getting the peerlist from 
-    //the remote peer or not. If we are connecting to all peers in an already received
-    //peerServerList, we are not interested in getting new lists.
+
     /**
+     * connectToPeer is called when this Peer should connect to a remote peer.
+     * 
+     * It creates a new PeerHandler for the remote Peer by using PeerHandler's 
+     * second constructor (connecter constructor, to which we pass input and
+     * output streams).
      *
-     * @param otherPeerIp
-     * @param port
-     * @param sendMePeerList
+     * @param otherPeerIp IP-address of listening ServerSocket to connect to at
+     * remote peer.
+     * @param port port number of listening erverSocket to connect to at
+     * remote peer.
+     * @param sendMePeerList a flag that shows if we are interested in getting 
+     * the list of peers in swarm from the remote peer or not. If we are connecting 
+     * to all peers in an already received peerServerList, we are not interested 
+     * in getting new lists.
      */
     public synchronized void connectToPeer(String otherPeerIp, int port, boolean sendMePeerList) {
         try {
             Socket socket = new Socket (otherPeerIp, port);
-//            addPlayer(peerHandler);
             OutputStream outStream = socket.getOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(outStream));
             out.flush();
             InputStream inStream = socket.getInputStream();
-            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inStream)); 
-//            ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));            
-//            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));    
+            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inStream));  
             //Create peerhandler with streams, and start its thread
             PeerHandler peerHandler = new PeerHandler(out,in,this,sendMePeerList);
             serverRole.getExecutor().execute(peerHandler);           
@@ -192,6 +200,11 @@ public class Peer {
     }
     
     /**
+     * disconnectMe is called when this Peer should disconnect from the swarm it
+     * is in.
+     * 
+     * It sends disconnect notifications to all other peers in swarm (so that
+     * they call their disconnectOtherPeer method).
      *
      */
     public synchronized void disconnectMe() {
@@ -207,8 +220,12 @@ public class Peer {
     }
     
     /**
+     * disconectOtherPeer is called by PeerHandler when it receives a disconnect
+     * notification. It removes all the information representing a peer from the
+     * lists.
      *
-     * @param disconnectingPeerAddress
+     * @param disconnectingPeerAddress address to the listening socket of the
+     * peer that wants to disconnect.
      */
     public synchronized void disconnectOtherPeer(InetSocketAddress disconnectingPeerAddress) {
         int index = playerServers.indexOf(disconnectingPeerAddress);
@@ -220,11 +237,13 @@ public class Peer {
         updateGameState();
         showPlayerServersInGui();
         showScoresInGui();
+//        removeGestureFromGui(index);
     }
     
     /**
-     *
-     * @param gesture
+     * playGesture is called from the GUI when a user wants to play a gesture.
+     * 
+     * @param gesture Gesture to play
      */
     public synchronized void playGesture(Gesture gesture) {
         myCurrentGesture = gesture;
@@ -235,8 +254,10 @@ public class Peer {
     }
     
     /**
+     * updateOpponentGesture is called by PeerHandler when it receives a Gesture
+     * from a remote peer.
      *
-     * @param peerHandler
+     * @param peerHandler used to 
      * @param gesture
      */
     public synchronized void updateOpponentGesture(PeerHandler peerHandler, Gesture gesture) {
@@ -246,7 +267,9 @@ public class Peer {
     }
 
     /**
-     *
+     * updateGameState checks if everyone in the swarm has picked a gesture, and
+     * in that case calculates the score for this round, sets the current Gesture
+     * to UNKNOWN and re-enables the send button in GUI.
      */
     public void updateGameState() {
         //Calculate score if all results are in
@@ -261,16 +284,11 @@ public class Peer {
             myCurrentGesture = Gesture.UNKNOWN;
             showScoresInGui();
             gestureSendAllowedInGui();
-//            System.out.println("My score: " + myScore);
-//            for (int i = 0; i < scores.size(); i++) {
-//                System.out.println("Score for player " + i
-//                    + ": " + scores.get(i));
-//            }
         }
     }
     
     /**
-     *
+     * 
      */
     public synchronized void calculateScore() {
         int nrOfPlayers = currentChoices.size() + 1;
@@ -347,22 +365,34 @@ public class Peer {
     }
         
     /**
-     *
-     * @param msg
+     * textMessage is used to send a text message to all the other peers in swarm.
+     * 
+     * @param msg text to be sent
      */
-    public synchronized void testMessage(String msg) {
+    public synchronized void textMessage(String msg) {
         for (PeerHandler peer : playerHandlers) {
             peer.sendTextMessage(msg);
         }
     }
 
-    void handleTextMessage(String textMessage) {
+    /**
+     * handleTextMessage is called by PeerHandler when it receives a text message.
+     * @param textMessage received text message
+     */
+    public void handleTextMessage(String textMessage) {
         System.out.println("Text message received: \"" + textMessage + "\"");
     }
 
+    /**
+     * gestureSendAllowedInGui enables the send button in GUI
+     */
     private void gestureSendAllowedInGui() {
         mainWindow.allowGestureSend();
     }
+    
+//    public void removeGestureFromGui(int index) {
+//        mainWindow.removeGestureAt(index);
+//    }
         
     /**
      *

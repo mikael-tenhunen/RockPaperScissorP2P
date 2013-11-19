@@ -14,41 +14,53 @@ import java.net.SocketAddress;
 import java.util.List;
 
 /**
- * PeerHandler listens for incoming gestures.
+ * PeerHandler represents the interface between two peers. It listens for 
+ * incoming messages and sends messages.
+ * 
  */
 class PeerHandler implements Runnable {
-    Socket peerSocket;
     Peer me;
     ObjectInputStream in;
     ObjectOutputStream out;
     InetSocketAddress serverSocketAddress;
     boolean sendMePeerList;
     
-    //This is the constructor used when someone has called this peer's server-role.
-    //It sends a message requesting serverSocketAddress, so that the other side
-    //will send it and the message receiver can call addPlayer
+    /**
+     * This is the constructor used when someone has called this peer's server-
+     * role (listener constructor).
+     * It sends a message requesting serverSocketAddress, so that the other side
+     * will send it and the message receiver can call addPlayer.
+     * @param peerSocket the socket used to communicate with remote peer
+     * @param me Peer object representing local peer
+     */
     public PeerHandler(Socket peerSocket, Peer me) {
-        this.peerSocket = peerSocket;
         this.me = me;
         sendMePeerList = true;
         try {
-            System.out.println("Trying to initialize input- output streams in PeerHandler");          
-//            out = new ObjectOutputStream(new BufferedOutputStream(peerSocket.getOutputStream()));
-//            in = new ObjectInputStream(new BufferedInputStream(peerSocket.getInputStream()));     
+            System.out.println("Trying to initialize input- output streams in PeerHandler");           
             OutputStream outStream = peerSocket.getOutputStream();
             out = new ObjectOutputStream(new BufferedOutputStream(outStream));
             out.flush();
             InputStream inStream = peerSocket.getInputStream();            
             in = new ObjectInputStream(new BufferedInputStream(inStream));
-//            System.out.println("PeerHandler got input- and output streams.");
             sendServerSocketAddressRequest("ServerSocketAddressRequestFromListener");
         } catch (IOException iOException) {
             System.out.println("PeerHandler could not get input and/or output streams to peer.");
         }
     }
 
-    //Constructor to be called when this peer has called someone else's server-
-    //role. It also sends a serverSocketAddressRequest
+    /**
+     * Constructor to be called when this peer has called someone else's server-
+     * role (connecter constructor). It also sends a serverSocketAddressRequest
+     * 
+     * @param out OutputStrem to remote peer's PeerHandler
+     * @param in InputStream
+     * @param me Peer object representing local peer
+     * @param sendMePeerList flag that show whether a list of peers in the swarm
+     * should be requested or not. It is requested when this peer is
+     * connecting to another peer, but not when this peer is connecting to another
+     * peer as a result of already having received the list of peers.
+     */
     PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me, boolean sendMePeerList) {
         this.me = me;
         this.sendMePeerList = sendMePeerList;
@@ -60,14 +72,17 @@ class PeerHandler implements Runnable {
                     + "connecter-constructor of PeerHandler");
         }
         this.in = in;
-        peerSocket = null;
         sendServerSocketAddressRequest("ServerSocketAddressRequestFromConnecter");
     }
     
-    // type can be
-    // ServerSocketAddressRequestFromListener
-    // ServerSocketAddressRequestFromConnecter
-    public void sendServerSocketAddressRequest(String type) {
+    /**
+     * Sends a request for remote peer's server socket address.
+     * 
+     * @param type can be either "ServerSocketAddressRequestFromListener" or
+     * "ServerSocketAddressRequestFromConnecter" depending on which constructor
+     * calls this method.
+     */
+    private void sendServerSocketAddressRequest(String type) {
         try {
             Message msg = new Message(type,null);
             out.writeObject(msg);
@@ -79,18 +94,18 @@ class PeerHandler implements Runnable {
         }
     }
     
-    //Sends this peer's server-role socket address
-    //type can be: 
-    // ServerSocketAddressToListener
-    // ServerSocketAddressToConnecter
-    //
-    // There is no type ServerSocketAddressToListenerNoList because this is
-    // equivalent to what happens when ServerSocketAddressToConnecter is type
-    // 
-    //Also checks if this PeerHandler wants peerServerList from the remote peer.
-    //If the remote peer had a listener-role in relation to this peer, we send
-    //either a ServerSocketAddressToListener or a 
-    //ServerSocketAddressToListenerNoList
+    /**
+     * Sends this peer's server-role socket address.
+     * 
+     * Also checks if this PeerHandler wants peerServerList from the remote peer.
+     * If the remote peer had a listener-role in relation to this peer, we send
+     * either a ServerSocketAddressToListener or a ServerSocketAddressToListenerNoList
+     * 
+     * @param type can be "ServerSocketAddressToListener" or
+     * "ServerSocketAddressToConnecter". There is no type 
+     * ServerSocketAddressToListenerNoList because this is equivalent to what 
+     * happens when ServerSocketAddressToConnecter is type
+     */
     public void sendServerSocketAddress(String type) {
         try {
             if ((type == "ServerSocketAddressToListener") && !sendMePeerList) {
@@ -109,8 +124,10 @@ class PeerHandler implements Runnable {
         }
     }
 
-    //Sends this peer's list of peer server socket addresses, so that a peer
-    //joining the network can establish connections with all other peers
+    /**
+     * Sends this peer's list of peer server socket addresses, so that a peer
+     * joining the network can establish connections with all other peers.
+     */
     public void sendPeerServerList() {
         try {
             System.out.println("Now in sendPeerServerList in PeerHandler...");
@@ -124,6 +141,9 @@ class PeerHandler implements Runnable {
         }
     }
     
+    /**
+     * Sends a request for current score of remote peer.
+     */
     void requestScore() {
         try {
             Message msg = new Message("ScoreRequest",null);
@@ -135,6 +155,9 @@ class PeerHandler implements Runnable {
         }
     }
     
+    /**
+     * Sends current score of this peer to remote peer.
+     */
     void sendScore() {
         try {
             Message msg = new Message("Score", me.getScore());
@@ -145,10 +168,12 @@ class PeerHandler implements Runnable {
             System.out.println("Problem sending score");
         }
     }    
-    
-    //This is needed for a new peer in the swarm to request the current choices
-    //of already existing peers in the swarm (they might have made a choice 
-    //this round when this peer connects)
+
+    /**
+     * This is needed for a new peer in the swarm to request the current choices 
+     * of already existing peers in the swarm (they might have made a choice 
+     * this round when this peer connects).
+     */
     public void requestGesture() {
         try {
             Message msg = new Message("GestureRequest",null);
@@ -159,10 +184,11 @@ class PeerHandler implements Runnable {
             System.out.println("Problem sending gesture request");
         }        
     }
-    
-    //Sends game gesture
+
+    /**
+     * @param gesture Gesture to be sent
+     */
     public void sendGesture(Gesture gesture) {
-//        System.out.println("Gesture about to be sent from PeerHandler...");
         try {
             Message msg = new Message("Gesture",gesture);
             out.writeObject(msg);
@@ -174,6 +200,10 @@ class PeerHandler implements Runnable {
         System.out.println("Gesture sent.");
     }
     
+    /**
+     * 
+     * @param textMessage text to be sent to remote peer
+     */
     public void sendTextMessage(String textMessage) {
         try {
             //System.out.println("Sending text message to: " + peerSocket.getRemoteSocketAddress());
@@ -187,6 +217,10 @@ class PeerHandler implements Runnable {
         }        
     }
     
+    /**
+     * @param socketAddress the address of the listening socket of this peer
+     * (used by remote peers as an identifier).
+     */
     void sendDisconnectNotification(InetSocketAddress socketAddress) {
         try {
             Message msg = new Message("DisconnectNotification",socketAddress);
@@ -198,6 +232,13 @@ class PeerHandler implements Runnable {
         }
     }
     
+    /**
+     * reveiveMessage receives a message from the remote peer and reacts
+     * accordingly.
+     * 
+     * For a list of all kinds of message that can be received, see
+     * rockpaperscissor.Message
+     */
     public synchronized void receiveMessage() {
         Object returnMessage = null;
         try {
@@ -211,16 +252,9 @@ class PeerHandler implements Runnable {
                 case "ServerSocketAddressToListener":
                     InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
                     serverSocketAddress = serverConnecter;
-//                    System.out.println("serverSocketAddress received!");
                     sendPeerServerList();
                     me.addPlayer(this);
                     break;
-//                case "ServerSocketAddressToListenerNoList":
-//                    InetSocketAddress serverConnecter = (InetSocketAddress) msg.getMsgObj();
-//                    serverSocketAddress = serverConnecter;
-//                    sendPeerServerList();
-//                    me.addPlayer(this);
-//                    break;
                 case "ServerSocketAddressToConnecter":
                     InetSocketAddress serverListener = (InetSocketAddress) msg.getMsgObj();
                     serverSocketAddress = serverListener;
@@ -270,11 +304,17 @@ class PeerHandler implements Runnable {
         }  
     }
     
+    /**
+     * @return address to this peer's listening socket (used as identifier).
+     */
     SocketAddress getServerSocketAddress() {
         InetSocketAddress inetSocketAddress = (InetSocketAddress) serverSocketAddress;
         return inetSocketAddress;
     }
         
+    /**
+     * Tight loop receiving messages
+     */
     @Override
     public void run() {
         System.out.println("PeerHandler run-method activated!");
@@ -283,6 +323,9 @@ class PeerHandler implements Runnable {
         }
     }
 
+    /**
+     * close in- and output streams.
+     */
     void closeAll() {
         try {
             in.close();

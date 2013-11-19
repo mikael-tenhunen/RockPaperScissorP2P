@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package userinterface;
 
 import java.awt.event.ActionEvent;
@@ -15,7 +11,13 @@ import rockpaperscissor.RockPaperScissor;
 
 /**
  *
- * @author Kalle
+ * This window is to give the information of which port you want to listen for 
+ * incoming connections and optionally which IP and port you want to connect to.
+ * At least one peer in the swarm must be known to connect to be a part of it.
+ * 
+ * The buttons call the static method RockPaperScissor.startServer (which returns
+ * a Peer Object) and the connect button calls connectToPeer method at a Peer object.
+ * 
  */
 public class ConnectWindow extends javax.swing.JFrame {
     int portInt;

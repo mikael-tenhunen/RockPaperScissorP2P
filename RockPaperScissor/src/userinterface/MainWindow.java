@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package userinterface;
 
 import java.awt.event.ActionEvent;
@@ -10,13 +6,19 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 import rockpaperscissor.Gesture;
 import rockpaperscissor.Peer;
 
 /**
- *
- * @author Kalle
+ * MainWindow is the JFrame for the main game window. This is where the game is
+ * played, gestures sent, game state shown.
+ * 
+ * Right now it is a bastard hybrid of AWT and Swing. There are methods to
+ * update the GUI from within the game (e.g. updatePlayers) and to enable the
+ * send button.
+ * 
+ * When a gesture is sent, the send button gets disabled until allowGestureSend 
+ * is called.
  */
 public class MainWindow extends javax.swing.JFrame {
     private Peer peer;
@@ -267,29 +269,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
 
-//    public void updateLists(List<Gesture> allGestures, List<Integer> allScores, List<InetSocketAddress> allPlayerServers) {
-//        DefaultListModel<Gesture> gestureListModel = new DefaultListModel();
-//        for (Gesture score : allGestures) {
-//            gestureListModel.addElement(score);
-//        }
-//        choicesList.setModel(gestureListModel);        
-//        
-//        DefaultListModel<Integer> scoreListModel = new DefaultListModel();
-//        for (Integer score : allScores) {
-//            scoreListModel.addElement(score);
-//        }
-//        scoreList.setModel(scoreListModel);
-//   
-//        DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
-//        for (InetSocketAddress address : allPlayerServers) {
-//            playerServerListModel.addElement(address);
-//        }
-//        playerList.setModel(playerServerListModel);
-//    }
-    
     /**
      *
-     * @param allGestures
+     * @param allGestures, List with all players' gestures (including the local
+     * player.
      */
     public void updateGestures(List<Gesture> allGestures) {
         DefaultListModel<Gesture> gestureListModel = new DefaultListModel();
@@ -301,7 +284,7 @@ public class MainWindow extends javax.swing.JFrame {
     
     /**
      *
-     * @param allScores
+     * @param allScores, list with all players' scores
      */
     public void updateScores(List<Integer> allScores) {
          DefaultListModel<Integer> scoreListModel = new DefaultListModel();
@@ -312,8 +295,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     /**
-     * This method updates player herpderop
-     * @param allPlayerServers thehsdh
+     * 
+     * @param allPlayerServers, all players' addresses to their ServerSockets
      */
     public void updatePlayers(List<InetSocketAddress> allPlayerServers) {
         DefaultListModel<InetSocketAddress> playerServerListModel = new DefaultListModel();
@@ -324,7 +307,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     /**
-     *
+     * Enables the send button, so gestures can be sent to other players.
      */
     public void allowGestureSend() {
 //        sendButton.setEnabled(true);
@@ -334,4 +317,12 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
+
+//    public void removeGestureAt(final int index) {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                scoreList.remove(index + 1);
+//            }
+//        });        
+//    }
 }
