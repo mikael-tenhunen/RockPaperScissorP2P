@@ -15,14 +15,21 @@ public class RockPaperScissor {
      * @param args
      */
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-
-        Thread t = new Thread() {
+        startProgram();
+    }
+    
+    public static void startProgram() {
+//        Thread t = new Thread() {
+//            public void run() {
+//                ConnectWindow.startConnectWindow();
+//            }
+//        };
+//        t.start();
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 ConnectWindow.startConnectWindow();
             }
-        };
-        t.start();
+        });  
     }
     
     /**

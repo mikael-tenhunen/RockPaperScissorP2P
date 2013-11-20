@@ -8,6 +8,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import rockpaperscissor.Gesture;
 import rockpaperscissor.Peer;
+import rockpaperscissor.RockPaperScissor;
 
 /**
  * MainWindow is the JFrame for the main game window. This is where the game is
@@ -35,6 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow(Peer peer) {
         this.peer = peer;
         initComponents();
+        System.out.println("Peer object: " + peer);
         peer.setMainWindow(this);
     }
 
@@ -127,11 +129,16 @@ public class MainWindow extends javax.swing.JFrame {
                     public void actionPerformed(ActionEvent e)
                     {
                         MainWindow.this.peer.disconnectMe();
-                        ConnectWindow.startConnectWindow();
+                        //                ConnectWindow.startConnectWindow();
                         MainWindow.this.dispose();
-
+                        RockPaperScissor.startProgram();
                     }
                 }    );
+                disconnectButton.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        disconnectButtonActionPerformed(evt);
+                    }
+                });
 
                 playerList.setModel(new javax.swing.AbstractListModel() {
                     String[] strings = { "Currently no players..." };
@@ -147,7 +154,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(disconnectButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(rockRadio)
                         .addGap(4, 4, 4)
                         .addComponent(paperRadio)
@@ -162,7 +169,7 @@ public class MainWindow extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -214,6 +221,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void paperRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paperRadioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_paperRadioActionPerformed
+
+    private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_disconnectButtonActionPerformed
 
     /**
      *

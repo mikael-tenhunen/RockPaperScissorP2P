@@ -116,7 +116,8 @@ public class Peer {
         //Now request the score and current gesture of this player
         peerHandler.requestScore();
         peerHandler.requestGesture();
-        System.out.println("Added " + peerHandler.getServerSocketAddress() + " tp playerList");
+        System.out.println("Added " + peerHandler.getServerSocketAddress() + 
+                " tp playerList");
         System.out.println("Now my playerServers contains " + playerServers);
         showPlayerServersInGui();
 //        showScoresInGui();
@@ -208,15 +209,28 @@ public class Peer {
      *
      */
     public synchronized void disconnectMe() {
-        for (PeerHandler ph : playerHandlers) {
-            ph.sendDisconnectNotification((InetSocketAddress)serverSocket.getLocalSocketAddress());
-            ph.closeAll();
-            try {
-                serverSocket.close();
-            } catch (IOException ex) {
-                System.out.println("Problem closing server socket");
+        if (playerHandlers.size() == 0) {
+            closeListener();
+        }
+        else {
+            for (PeerHandler ph : playerHandlers) {
+                ph.sendDisconnectNotification((InetSocketAddress)serverSocket.getLocalSocketAddress());
+                //ph.closeAll();
             }
         }
+    }
+    
+    /**
+     * closeListener is called to close the Server Socket that listens for 
+     * incoming connections from other peers.
+     */
+    public synchronized void closeListener() {
+        System.out.println("Trying to close listener...");
+        try {
+            serverSocket.close();
+        } catch (IOException ex) {
+            System.out.println("Problem closing server socket");
+        }        
     }
     
     /**
@@ -409,16 +423,28 @@ public class Peer {
     public void showScoresInGui() {
         List<Integer> allScores = new ArrayList(scores);
         allScores.add(0,myScore);
-        mainWindow.updateScores(allScores);
+        try {
+            mainWindow.updateScores(allScores);
+        }
+        catch (NullPointerException e) {
+            System.out.println("nullpointer exception caught in"
+                    + " showScoresInGui");
+        }
     }
     
     /**
      *
      */
-    public void showPlayerServersInGui() {
+    public void showPlayerServersInGui() {    
         List<InetSocketAddress> allPlayerServers = new ArrayList(playerServers);
         allPlayerServers.add(0,(InetSocketAddress)serverSocket.getLocalSocketAddress());
-        mainWindow.updatePlayers(allPlayerServers);
+        try {
+            mainWindow.updatePlayers(allPlayerServers);
+        }
+        catch (NullPointerException e) {
+            System.out.println("nullpointer exception caught in"
+                    + " showPlayerServersInGui");
+        }
     }    
     
     /**

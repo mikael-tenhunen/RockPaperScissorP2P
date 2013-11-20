@@ -139,13 +139,15 @@ public class ConnectWindow extends javax.swing.JFrame {
                                 try
                                 {
                                     peer = RockPaperScissor.startServer(portInt);
+                                    ConnectWindow.this.dispose();
+                                    MainWindow.startMainWindow(ConnectWindow.this.peer);
                                 }
                                 catch(IOException exep)
                                 {
+                                    JOptionPane.showMessageDialog(null, "The socket you "
+                                        + "chose is already in use or not available at this "
+                                        + "time");
                                 }
-                                ConnectWindow.this.dispose();
-                                MainWindow.startMainWindow(ConnectWindow.this.peer);
-
                             }
 
                         }

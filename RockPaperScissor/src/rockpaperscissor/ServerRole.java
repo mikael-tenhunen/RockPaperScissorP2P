@@ -42,7 +42,7 @@ public class ServerRole implements Runnable {
 
         try {
             //Listen for incoming connections and start threads to handle any new clients
-            while (true) {
+            while (!serverSocket.isClosed()) {
                 //ServerSocket.accept() returns a Socket
                 Socket peerSocket = serverSocket.accept();
                 System.out.println("New client connected from port: " + peerSocket.getPort());
@@ -60,6 +60,7 @@ public class ServerRole implements Runnable {
 //                    System.out.println ("Problem closing serverSocket");
 //            }
             System.out.println("Something went wrong with server socket...");
+            iOException.printStackTrace();
         }
     }
     

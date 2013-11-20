@@ -24,6 +24,7 @@ class PeerHandler implements Runnable {
     ObjectOutputStream out;
     InetSocketAddress serverSocketAddress;
     boolean sendMePeerList;
+    boolean keepReceiving;
     
     /**
      * This is the constructor used when someone has called this peer's server-
@@ -36,6 +37,7 @@ class PeerHandler implements Runnable {
     public PeerHandler(Socket peerSocket, Peer me) {
         this.me = me;
         sendMePeerList = true;
+        keepReceiving = true;
         try {
             System.out.println("Trying to initialize input- output streams in PeerHandler");           
             OutputStream outStream = peerSocket.getOutputStream();
@@ -64,6 +66,7 @@ class PeerHandler implements Runnable {
     PeerHandler(ObjectOutputStream out, ObjectInputStream in, Peer me, boolean sendMePeerList) {
         this.me = me;
         this.sendMePeerList = sendMePeerList;
+        keepReceiving = true;
         this.out = out;
         try {
             out.flush();
@@ -218,10 +221,13 @@ class PeerHandler implements Runnable {
     }
     
     /**
+     * This is what needs to be done when the local peer wants to disconnect.
+     * 
      * @param socketAddress the address of the listening socket of this peer
      * (used by remote peers as an identifier).
      */
     void sendDisconnectNotification(InetSocketAddress socketAddress) {
+        keepReceiving = false;
         try {
             Message msg = new Message("DisconnectNotification",socketAddress);
             out.writeObject(msg);
@@ -242,9 +248,8 @@ class PeerHandler implements Runnable {
     public synchronized void receiveMessage() {
         Object returnMessage = null;
         try {
-            while (returnMessage == null) {
-                    returnMessage = in.readObject ();
-            }
+            returnMessage = in.readObject();
+            
             Message msg = (Message) returnMessage;
             String type = msg.getType();
             
@@ -297,9 +302,13 @@ class PeerHandler implements Runnable {
                     break;     
             }
         }
+        catch (java.io.EOFException eofException) {
+            keepReceiving = false;
+            closeAll();
+        }
         catch (Exception e) {
 //            System.out.println("Problem encountered while receiving message");
-            System.out.print(e);
+            System.out.println(e);
             e.printStackTrace();
         }  
     }
@@ -318,9 +327,12 @@ class PeerHandler implements Runnable {
     @Override
     public void run() {
         System.out.println("PeerHandler run-method activated!");
-        while(true) {
+        while(keepReceiving) {
             receiveMessage();
         }
+        closeAll();
+        me.closeListener();
+        System.out.println("Succesfully disconnected");
     }
 
     /**
@@ -328,8 +340,8 @@ class PeerHandler implements Runnable {
      */
     void closeAll() {
         try {
-            in.close();
             out.close();
+            in.close();
         } catch (IOException iOException) {
             System.out.println("Problem closing input- and output streams for"
                     + "peer handler socket");
