@@ -51,6 +51,7 @@ public class ConnectWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        localPortField.setText("8181");
         localPortField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 localPortFieldActionPerformed(evt);
@@ -119,6 +120,8 @@ public class ConnectWindow extends javax.swing.JFrame {
 
                     }
                 }    );
+
+                remotePortField.setText("8180");
 
                 startButton.setText("Start  without connecting");
                 startButton.addActionListener(new ActionListener()
