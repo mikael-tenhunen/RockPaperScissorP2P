@@ -1,7 +1,6 @@
 package rockpaperscissor;
 
 import java.io.IOException;
-import java.util.*;
 import java.net.*;
 import userinterface.ConnectWindow;
 /**
