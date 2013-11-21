@@ -62,7 +62,8 @@ public class ConnectWindow extends javax.swing.JFrame {
 
         jLabel2.setText("Remote IP");
 
-        remoteIpField.setText("127.0.0.1");
+        //remoteIpField.setText("127.0.0.1");
+        remoteIpField.setText("0.0.0.0");
         remoteIpField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 remoteIpFieldActionPerformed(evt);

@@ -118,6 +118,7 @@ class PeerHandler implements Runnable {
                 type = "ServerSocketAddressToConnecter";
             }
             InetSocketAddress serverToConnectTo = (InetSocketAddress) me.getServerSocket().getLocalSocketAddress();
+            System.out.println("Server InetAddress: " + serverToConnectTo.getAddress());
             Message msg = new Message(type, serverToConnectTo);
             out.writeObject(msg);
             out.flush();
