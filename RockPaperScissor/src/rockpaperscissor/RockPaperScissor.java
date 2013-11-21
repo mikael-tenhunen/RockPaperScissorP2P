@@ -19,19 +19,34 @@ public class RockPaperScissor {
     public static void main(String[] args) {
         startProgram();
         //TEST
-        try {
-            System.out.println(InetAddress.getLocalHost());
+//        try {
+//            System.out.println(InetAddress.getLocalHost());
 //            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-//            System.out.println(netInterfaces);
 //            NetworkInterface netInterface;
-//            while(netInterfaces.hasMoreElements()) {
+//            Enumeration<InetAddress> addresses;
+//            InetAddress address = null;
+//            while (netInterfaces.hasMoreElements()) {
 //                netInterface = netInterfaces.nextElement();
-//                System.out.println(netInterface + ", " + );
-//                
+//                addresses = netInterface.getInetAddresses();
+//                while (addresses.hasMoreElements()) {
+//                    address = addresses.nextElement();
+//                    System.out.println(netInterface + ": " + address);
+//                    System.out.println("local: " + address.isLoopbackAddress());
+//                    if (!address.isLoopbackAddress() && 
+//                            !address.isLinkLocalAddress() && 
+//                            (address instanceof Inet4Address)) {
+//                        break;
+//                    }
+//                }
+//                if (address != null) {
+//                    if (!address.isLoopbackAddress() && !address.isLinkLocalAddress()) {
+//                        break;
+//                    }
+//                }
 //            }
-        } catch (Exception ex) {
-            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        } catch (Exception ex) {
+//            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         //TEST
     }
     
@@ -58,7 +73,39 @@ public class RockPaperScissor {
      */
     public static Peer startServer(int port) throws IOException {
         ServerSocket servSocket = new ServerSocket();
-        servSocket.bind(new InetSocketAddress(InetAddress.getLocalHost(),port),port);
+        InetAddress address = InetAddress.getLocalHost();        
+        
+        //TEST 
+        try {
+            System.out.println(InetAddress.getLocalHost());
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+            NetworkInterface netInterface;
+            Enumeration<InetAddress> addresses;
+            while (netInterfaces.hasMoreElements()) {
+                netInterface = netInterfaces.nextElement();
+                addresses = netInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    address = addresses.nextElement();
+                    System.out.println(netInterface + ": " + address);
+                    System.out.println("local: " + address.isAnyLocalAddress());
+                    if (!address.isLoopbackAddress() && 
+                            !address.isLinkLocalAddress() && 
+                            (address instanceof Inet4Address)) {
+                        break;
+                    }
+                }
+                if (!address.isLoopbackAddress() && 
+                        !address.isLinkLocalAddress() && 
+                        (address instanceof Inet4Address)) {
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Problem getting the local host IP-address");
+        }
+        //TEST
+
+        servSocket.bind(new InetSocketAddress(address,port),port);
         Peer peer = new Peer (servSocket);   
         //ServerRole of peer is initialized in startServerRole method of Peer
         peer.startServerRole();
