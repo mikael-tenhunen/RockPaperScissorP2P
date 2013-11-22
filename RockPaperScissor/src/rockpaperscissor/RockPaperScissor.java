@@ -3,8 +3,6 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import userinterface.ConnectWindow;
 /**
  * This is a the main class for the game Rock Paper Scissor.  * 
@@ -18,36 +16,6 @@ public class RockPaperScissor {
      */
     public static void main(String[] args) {
         startProgram();
-        //TEST
-//        try {
-//            System.out.println(InetAddress.getLocalHost());
-//            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-//            NetworkInterface netInterface;
-//            Enumeration<InetAddress> addresses;
-//            InetAddress address = null;
-//            while (netInterfaces.hasMoreElements()) {
-//                netInterface = netInterfaces.nextElement();
-//                addresses = netInterface.getInetAddresses();
-//                while (addresses.hasMoreElements()) {
-//                    address = addresses.nextElement();
-//                    System.out.println(netInterface + ": " + address);
-//                    System.out.println("local: " + address.isLoopbackAddress());
-//                    if (!address.isLoopbackAddress() && 
-//                            !address.isLinkLocalAddress() && 
-//                            (address instanceof Inet4Address)) {
-//                        break;
-//                    }
-//                }
-//                if (address != null) {
-//                    if (!address.isLoopbackAddress() && !address.isLinkLocalAddress()) {
-//                        break;
-//                    }
-//                }
-//            }
-//        } catch (Exception ex) {
-//            Logger.getLogger(RockPaperScissor.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        //TEST
     }
     
     public static void startProgram() {

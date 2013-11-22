@@ -50,15 +50,6 @@ public class ServerRole implements Runnable {
                 System.out.println("created new PeerHandler");
             }
         } catch (IOException iOException) {
-//            try {
-//                    System.out.println ("Something went wrong, closing "
-//                            + "server socket");
-//                    serverSocket.close ();
-//                
-//            }
-//            catch (IOException ioex) {
-//                    System.out.println ("Problem closing serverSocket");
-//            }
             System.out.println("Something went wrong with server socket...");
             iOException.printStackTrace();
         }

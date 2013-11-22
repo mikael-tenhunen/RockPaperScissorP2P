@@ -117,9 +117,9 @@ class PeerHandler implements Runnable {
                 //cases in message receiver
                 type = "ServerSocketAddressToConnecter";
             }
-            InetSocketAddress serverToConnectTo = (InetSocketAddress) me.getServerSocket().getLocalSocketAddress();
-            System.out.println("Server InetAddress: " + serverToConnectTo.getAddress());
-            Message msg = new Message(type, serverToConnectTo);
+            InetSocketAddress myListeningSocket = (InetSocketAddress) me.getServerSocket().getLocalSocketAddress();
+            System.out.println("Server InetAddress: " + myListeningSocket.getAddress());
+            Message msg = new Message(type, myListeningSocket);
             out.writeObject(msg);
             out.flush();
         }
@@ -134,7 +134,6 @@ class PeerHandler implements Runnable {
      */
     public void sendPeerServerList() {
         try {
-            System.out.println("Now in sendPeerServerList in PeerHandler...");
             Message msg = new Message("PeerServerList",me.getPlayerServers());
             out.writeObject(msg);
             out.flush();
