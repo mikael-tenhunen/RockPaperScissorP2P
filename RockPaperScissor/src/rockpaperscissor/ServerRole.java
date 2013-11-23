@@ -3,6 +3,7 @@ package rockpaperscissor;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors;
 public class ServerRole implements Runnable {
     private final Peer me;
     private final ServerSocket serverSocket;
-    private final int playerLimit = 10;
+    private final static int PLAYERLIMIT = 10;
     private final Executor e;
 
 
@@ -29,7 +30,7 @@ public class ServerRole implements Runnable {
     public ServerRole(Peer me) {
         this.me = me;
         serverSocket = me.getServerSocket();
-        e = Executors.newFixedThreadPool(playerLimit);
+        e = Executors.newFixedThreadPool(PLAYERLIMIT);
     }
 
     /**
@@ -49,7 +50,10 @@ public class ServerRole implements Runnable {
                 e.execute(new PeerHandler(peerSocket, me));
                 System.out.println("created new PeerHandler");
             }
-        } catch (IOException iOException) {
+        } 
+        catch (SocketException se) {
+        }
+        catch (IOException iOException) {
             System.out.println("Something went wrong with server socket...");
             iOException.printStackTrace();
         }

@@ -36,7 +36,6 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow(Peer peer) {
         this.peer = peer;
         initComponents();
-        System.out.println("Peer object: " + peer);
         peer.setMainWindow(this);
     }
 

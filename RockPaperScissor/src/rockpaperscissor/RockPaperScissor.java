@@ -33,7 +33,7 @@ public class RockPaperScissor {
     }
     
     /**
-     * startServer creates a new Peer object and starts the server role thread 
+     * startServer creates a new Peer object, starts the server role thread 
      * for the specific peer and then returns the Peer object.
      * @param port
      * @return Peer
@@ -43,7 +43,7 @@ public class RockPaperScissor {
         ServerSocket servSocket = new ServerSocket();
         InetAddress address = InetAddress.getLocalHost();        
         
-        //TEST 
+        //This code adds support for debian-based systems
         try {
             System.out.println(InetAddress.getLocalHost());
             Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -54,8 +54,6 @@ public class RockPaperScissor {
                 addresses = netInterface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     address = addresses.nextElement();
-                    System.out.println(netInterface + ": " + address);
-                    System.out.println("local: " + address.isAnyLocalAddress());
                     if (!address.isLoopbackAddress() && 
                             !address.isLinkLocalAddress() && 
                             (address instanceof Inet4Address)) {
@@ -71,7 +69,6 @@ public class RockPaperScissor {
         } catch (Exception ex) {
             System.out.println("Problem getting the local host IP-address");
         }
-        //TEST
 
         servSocket.bind(new InetSocketAddress(address,port),port);
         Peer peer = new Peer (servSocket);   
